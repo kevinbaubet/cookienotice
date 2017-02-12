@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>CookieNotice</title>
+        <link rel="stylesheet" href="demo.css" />
+
+        <link rel="stylesheet" href="../dist/cookienotice.css" />
+        
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" ></script>
+        
+        <script src="../src/cookienotice.js"></script>
+        <script>
+            jQuery(document).ready(function($) {
+                $('#cookie-notice').cookieNotice();
+            });
+        </script>
+    </head>
+    <body>
+        <div class="page">
+            <h1>Cookie Notice</h1>
+
+            <h2>Ce que fait Cookie Notice (<a href="https://www.cnil.fr/fr/exemple-de-bandeau-cookie" target="_blank">Rappel des obligations légales</a>)</h2>
+            <p>
+                <b>1ère étape :</b> une notice s'affiche pour informer l'utilisation des cookies pour une liste de services.<br />
+                <br />
+                <b>2ème étape :</b> un choix est fait si l'utilisateur :<br />
+                - clique sur le bouton de la notice et accepte l'utilisation des cookies<br />
+                - clique sur n'importe quel lien interne de la page et poursuit la navigation, ce qui vaut pour acceptation des cookies<br />
+                <br />
+                <b>3ème étape :</b> dépôt d'un cookie pour enregistrer le consentement de l'utilisateur :<br />
+                - pendant une durée maximum de 13 mois<br />
+                - possiblité de changer d'avis en supprimant le cookie <b>cookienotice-agree</b><br />
+                <br />
+            </p>
+
+            <h2>Exemple comportant un lien</h2>
+            <p>
+                Lorem ipsum dolor sit amet, <a href="">cliquer sur ce lien permet d'accepter les cookies</a>. Nisi, et reiciendis ea corrupti accusamus? Maxime nostrum deserunt assumenda consequatur magnam ipsam beatae ad facilis tenetur, ratione voluptatum error dicta iusto?
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, et reiciendis ea corrupti accusamus?
+                Nisi, et reiciendis ea corrupti accusamus? Maxime nostrum deserunt assumenda consequatur magnam ipsam beatae ad facilis tenetur, ratione voluptatum error dicta iusto?<br />
+                <br />
+            </p>
+
+            <h2>Tester l'acceptation</h2>
+            <p>
+                En PHP : $_COOKIE['cookienotice-agree']<br />
+                En JS : $.CookieNotice.agree<br />
+            </p>
+        </div>
+        </div>
+        <div id="cookie-notice" class="notice notice--cookie">
+            <p>
+                En navigant sur ce site vous acceptez l’utilisation de cookies permettant de vous offrir une expérience positive de notre site : <br />
+                partager vos contenus favoris avec vos amis, établir des statistiques de fréquentation, conserver vos préférences de navigation.
+                <a href="/mentions-legales">En savoir plus</a> <button>OK</button>
+            </p>
+        </div>
+    </body>
+</html>
