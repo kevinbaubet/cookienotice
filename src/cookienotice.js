@@ -122,7 +122,7 @@
             });
 
             // Lien dans le site
-            self.elements.link(self.elements.body).one('click.cookienotice.link', function() {
+            self.elements.link(self.elements.body).not(self.elements.notice.find('a')).one('click.cookienotice.link', function() {
                 self.agree();
             });
 
