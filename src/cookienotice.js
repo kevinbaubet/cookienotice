@@ -1,34 +1,27 @@
-/**
- * CookieNotice
- *
- * Permet d'afficher une notice sur les cookies
- *
- * @version 2.0 (04/01/2017)
- */
-(function($) {
+(function ($) {
     'use strict';
 
-    $.CookieNotice = function(element, options) {
+    $.CookieNotice = function (notice, options) {
         // Config
         $.extend((this.settings = {}), $.CookieNotice.defaults, options);
 
         // Élements
         this.elements = {
             body: $('body'),
-            notice: element,
-            button: this.settings.button,
-            link: this.settings.link
+            notice: notice
         };
+        this.elements.button = this.settings.button(this.elements.notice);
+        this.elements.link = this.settings.link(this.elements.body);
 
         // Init
-        this.load();
+        return this.load();
     };
 
     $.CookieNotice.defaults = {
-        button: function(element) {
+        button: function (element) {
             return element.find('button');
         },
-        link: function(body) {
+        link: function (body) {
             return body.find('a[target!="_blank"]');
         },
         classOpen: 'is-cookieNoticeOpen',
@@ -45,8 +38,9 @@
         /**
          * Initialisation
          */
-        load: function() {
+        load: function () {
             if (this.elements.notice.length === 0) {
+                console.error('CookieNotice: jQuery element not found.');
                 return false;
             }
 
@@ -56,12 +50,14 @@
             } else {
                 this.disagree();
             }
+
+            return this;
         },
 
         /**
          * Accepte les cookies
          */
-        agree: function() {
+        agree: function () {
             // Variable globale
             $.CookieNotice.agree = true;
 
@@ -77,7 +73,7 @@
             // User callback
             if (this.settings.onAgree !== undefined) {
                 this.settings.onAgree.call({
-                    CookieNotice: this,
+                    cookieNotice: this,
                     body: this.elements.body
                 });
             }
@@ -86,7 +82,7 @@
         /**
          * Refuse les cookies
          */
-        disagree: function() {
+        disagree: function () {
             // Variable globale
             $.CookieNotice.agree = false;
 
@@ -95,72 +91,82 @@
 
             // Suppression du cookie s'il existe
             if (this.getCookie(this.settings.cookieName) === 'true') {
-                this.setCookie(this.settings.cookieName, '', -1);
+                this.removeCookie(this.settings.cookieName);
             }
 
             // User callback
             if (this.settings.onDisagree !== undefined) {
                 this.settings.onDisagree.call({
-                    CookieNotice: this,
+                    cookieNotice: this,
                     body: this.elements.body
                 });
             }
 
             // Déclenchement des events pour accepter les cookies
             this.eventsHandler();
+
+            return this;
         },
 
         /**
          * Gestionnaire d'événements
          */
-        eventsHandler: function() {
+        eventsHandler: function () {
             var self = this;
 
             // Bouton "ok"
-            self.elements.button(self.elements.notice).one('click.cookienotice.button', function() {
+            self.elements.button.one('click.cookienotice.button', function () {
                 self.agree();
             });
 
             // Lien dans le site
-            self.elements.link(self.elements.body).not(self.elements.notice.find('a')).one('click.cookienotice.link', function() {
+            self.elements.link.not(self.elements.notice.find('a')).one('click.cookienotice.link', function () {
                 self.agree();
             });
 
             // User callback
             if (self.settings.afterEventsHandler !== undefined) {
                 self.settings.afterEventsHandler.call({
-                    CookieNotice: self,
+                    cookieNotice: self,
                     elements: self.elements
                 });
             }
+
+            return self;
         },
 
         /**
          * Suppression des événements déclenchés
          */
-        removeEvents: function() {
-            this.elements.button(this.elements.notice).off('click.cookienotice.button');
-            this.elements.link(this.elements.body).off('click.cookienotice.link');
+        removeEvents: function () {
+            this.elements.button.off('click.cookienotice.button');
+            this.elements.link.off('click.cookienotice.link');
+
+            return this;
         },
 
         /**
-         * Utils get/set cookie
+         * Utils cookie
          */
-        getCookie: function(name) {
+        getCookie: function (name) {
             var regex = new RegExp('(?:; )?' + name + '=([^;]*);?');
 
             return (regex.test(document.cookie)) ? decodeURIComponent(RegExp['$1']) : null;
         },
-        setCookie: function(name, value, duration) {
+        setCookie: function (name, value, duration, path) {
             var today = new Date();
             var expires = new Date();
+            path = path || '/';
 
             expires.setTime(today.getTime() + (duration*24*60*60*1000));
-            document.cookie = name + '=' + value + ';expires=' + expires.toGMTString() + ';path=/;';
+            document.cookie = name + '=' + value + ';expires=' + expires.toGMTString() + ';path=' + path + ';';
+        },
+        removeCookie: function (name, path) {
+            return this.setCookie(name, '', -1, path);
         }
     };
 
-    $.fn.cookieNotice = function(options) {
+    $.fn.cookieNotice = function (options) {
         if (!navigator.cookieEnabled) {
             return false;
         }

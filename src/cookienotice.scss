@@ -1,0 +1,86 @@
+.notice--cookie {
+    position: fixed;
+    bottom: 70px;
+    right: 70px;
+    z-index: 100;
+    max-width: 560px;
+    color: #fff;
+    background: rgba(0, 0, 0, .75);
+    transform: translateY(560px);
+    transition: transform .3s;
+
+    .is-cookieNoticeOpen & {
+        transform: translateY(0);
+    }
+
+    p {
+        position: relative;
+        margin: 20px;
+        padding-right: 180px;
+        font-size: 16px;
+    }
+
+    a {
+        position: absolute;
+        right: 50px;
+        bottom: 50%;
+        z-index: 5;
+        display: inline-block;
+        margin-bottom: -12px;
+        color: inherit;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    button {
+        position: absolute;
+        right: 0;
+        bottom: 50%;
+        z-index: 5;
+        padding: 0;
+        width: 40px;
+        height: 40px;
+        color: #000;
+        background-color: #fff;
+        border: 0;
+        border-radius: 50%;
+        cursor: pointer;
+        transform: translateY(50%);
+        transition: .3s;
+
+        &:hover,
+        &:focus {
+            color: #fff;
+            background-color: #000;
+        }
+    }
+
+    /* Responsive
+       ========================================================================== */
+    @media screen and (max-width: 767px) {
+        right: 0;
+        max-width: none;
+
+        p {
+            margin: 10px;
+            padding-right: 0;
+            padding-bottom: 35px;
+            line-height: 1.2;
+        }
+
+        a,
+        button {
+            top: auto;
+            bottom: 20px;
+        }
+        button {
+            bottom: 18px;
+        }
+        .is-cookieNoticeOpen & {
+            visibility: visible;
+            bottom: 0;
+        }
+    }
+}

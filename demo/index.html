@@ -6,12 +6,12 @@
         <link rel="stylesheet" href="demo.css" />
 
         <link rel="stylesheet" href="../dist/cookienotice.css" />
-        
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" ></script>
+
+        <script src="../node_modules/jquery/dist/jquery.min.js"></script>
         
         <script src="../src/cookienotice.js"></script>
         <script>
-            jQuery(document).ready(function($) {
+            jQuery(document).ready(function ($) {
                 $('#cookie-notice').cookieNotice();
             });
         </script>
@@ -48,12 +48,11 @@
                 En JS : $.CookieNotice.agree<br />
             </p>
         </div>
-        </div>
+
         <div id="cookie-notice" class="notice notice--cookie">
             <p>
-                En naviguant sur ce site vous acceptez l’utilisation de cookies permettant de vous offrir une expérience positive de notre site : <br />
-                partager vos contenus favoris avec vos amis, établir des statistiques de fréquentation, conserver vos préférences de navigation.
-                <a href="/mentions-legales">En savoir plus</a> <button>OK</button>
+                En poursuivant votre navigation, vous acceptez l'utilisation de services tiers pouvant installer des cookies.
+                <a href="/mentions-legales">En lire plus</a> <button>OK</button>
             </p>
         </div>
     </body>
