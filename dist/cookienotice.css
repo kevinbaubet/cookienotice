@@ -1,9 +1,9 @@
 .notice--cookie {
   position: fixed;
-  bottom: 70px;
-  right: 70px;
-  z-index: 100;
-  max-width: 560px;
+  bottom: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
   color: #fff;
   background: rgba(0, 0, 0, 0.75);
   -webkit-transform: translateY(560px);
@@ -28,16 +28,10 @@
   position: relative;
   margin: 1.25rem;
   padding-right: 11.25rem;
-  font-size: 1rem;
+  font-size: 0.813rem;
 }
 
 .notice--cookie a {
-  position: absolute;
-  right: 50px;
-  bottom: 50%;
-  z-index: 5;
-  display: inline-block;
-  margin-bottom: -0.75rem;
   color: inherit;
 }
 
@@ -50,13 +44,13 @@
   right: 0;
   bottom: 50%;
   z-index: 5;
-  padding: 0;
-  width: 40px;
+  padding: 0.313rem 0.625rem;
   height: 40px;
   color: #000;
+  font-weight: bold;
   background-color: #fff;
   border: 0;
-  border-radius: 50%;
+  border-radius: 20px;
   cursor: pointer;
   -webkit-transform: translateY(50%);
       -ms-transform: translateY(50%);
