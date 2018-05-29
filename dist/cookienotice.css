@@ -6,9 +6,9 @@
   width: 100%;
   color: #fff;
   background: rgba(0, 0, 0, 0.75);
-  -webkit-transform: translateY(560px);
-      -ms-transform: translateY(560px);
-          transform: translateY(560px);
+  -webkit-transform: translateY(500px);
+      -ms-transform: translateY(500px);
+          transform: translateY(500px);
   -webkit-transition: -webkit-transform .3s;
   transition: -webkit-transform .3s;
   -o-transition: transform .3s;
@@ -66,22 +66,14 @@
 }
 
 @media screen and (max-width: 767px) {
-  .notice--cookie {
-    right: 0;
-    max-width: none;
-  }
   .notice--cookie p {
     margin: 0.625rem;
     padding-right: 0;
-    padding-bottom: 2.188rem;
+    padding-bottom: 2.813rem;
     line-height: 1.2;
   }
-  .notice--cookie a,
   .notice--cookie button {
     top: auto;
-    bottom: 20px;
-  }
-  .notice--cookie button {
     bottom: 18px;
   }
   .is-cookieNoticeOpen .notice--cookie {
