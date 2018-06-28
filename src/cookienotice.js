@@ -38,6 +38,8 @@
             btnCustomize: '{prefix}-customize',
             active: 'is-active'
         },
+        reload: true,
+        summary: true,
         cookieDuration: 13*30, // 13 mois, durée max pour stocker le consentement
         afterEventsHandler: undefined,
         onChangeState: undefined
@@ -358,7 +360,10 @@
                     self.agree();
                     self.notice('hide');
 
-                    if (self.elements.serviceAction.length) {
+                    if (self.settings.reload) {
+                        self.reload();
+
+                    } else if (self.elements.serviceAction.length) {
                         self.elements.serviceAction.each(function (i, btn) {
                             btn = $(btn);
                             var btnAction = btn.attr('data-action');
@@ -392,6 +397,8 @@
                         if (!self.getCookie(self.cookieName)) {
                             self.notice('show');
                         }
+
+                        self.reload();
                     }
                 };
 
@@ -564,6 +571,15 @@
          */
         hasConsent: function () {
             return (!!this.getCookie(this.cookieName));
+        },
+
+        /**
+         * Rechargement de la page
+         */
+        reload: function () {
+            if (this.settings.reload) {
+                window.location.reload();
+            }
         },
 
         /**

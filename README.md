@@ -35,32 +35,32 @@ La configuration de **CookieNotice** se passe dans le fichier _CookieNotice.clas
 C'est à vous de gérer la traduction en fonction de vos préférences.
 
 ___notice___ : Configuration du bandeau notice
-    * _description_ : Contenu de la notice
-    * _summary_ : Résumé de la notice affichée en version mobile
-    * _customize_ : Label du bouton pour personnaliser les services
-    * _agree_ : Label du bouton pour accepter tous les services
+* _description_ : Contenu de la notice
+* _summary_ : Résumé de la notice affichée en version mobile
+* _customize_ : Label du bouton pour personnaliser les services
+* _agree_ : Label du bouton pour accepter tous les services
    
 ___modal___ : Configuration de la popup pour personnaliser les services. Commentez cette partie pour ne pas autoriser la personnalisation des services
-    * _label_ : Nom de la popup
-    * _description_ : Description de la popup (optionnel)
-    * _close_ : Nom du bouton de fermeture
+* _label_ : Nom de la popup
+* _description_ : Description de la popup (optionnel)
+* _close_ : Nom du bouton de fermeture
     
 ___groups___ : Liste des groupes de services
-    * ___id___ : Identifiant du groupe (ex: "social")
-        * _label_ : Nom du groupe
-        * _description_ : Description du groupe (optionnel)
+* ___id___ : Identifiant du groupe (ex: "social")
+    * _label_ : Nom du groupe
+    * _description_ : Description du groupe (optionnel)
         
 ___services___ : Liste des services associés aux groupes
-  * ___id___ : Identifiant du service (ex: "facebook")
-      * _label_ : Nom du service
-      * _url_ : URL vers les termes d'utilisation/politique de confidentialité du service
-      * _group_ : Identifiant du groupe à rattacher
+* ___id___ : Identifiant du service (ex: "facebook")
+  * _label_ : Nom du service
+  * _url_ : URL vers les termes d'utilisation/politique de confidentialité du service
+  * _group_ : Identifiant du groupe à rattacher
       
       
 ### Méthodes
 
-* namespace : CookieNotice
-* classe    : Service
+* namespace : **CookieNotice**
+* classe    : **Service**
         
 | Méthode            | Arguments                                                                                                                                                          | Description                                                                                       |
 |--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
@@ -104,6 +104,7 @@ ___services___ : Liste des services associés aux groupes
 | &nbsp;&nbsp;&nbsp;&nbsp;btnAgree     | string   | '{prefix}-agree'                                             | Classe du bouton pour accepter                                         |
 | &nbsp;&nbsp;&nbsp;&nbsp;btnCustomize | string   | '{prefix}-customize'                                         | Classe du bouton pour personnaliser                                    |
 | &nbsp;&nbsp;&nbsp;&nbsp;active       | string   | 'is-active'                                                  | Classe pour l'état actif d'un bouton                                   |
+| reload                               | boolean  | true                                                         | Lors du consentement, un rechargement de la page est effectué          |
 | cookieDuration                       | integer  | 13*30                                                        | Durée d'enregistrement du cookie du consentement                       |
 | afterEventsHandler                   | function | undefined                                                    | Callback après la déclaration des événements                           |
 | onChangeState                        | function | undefined                                                    | Callback une fois le choix effectué.                                   |
@@ -122,6 +123,7 @@ ___services___ : Liste des services associés aux groupes
 | getState           | **service** *string* Identifiant du service, exemple : "facebook"                                                                                                  | Récupération de l'état du service. Si le choix n'a pas été fait, l'état retourné est "undefined"  |                 
 | isAllowed          | **service** *string* Identifiant du service, exemple : "facebook"                                                                                                  | Détermine si un service est autorisé                                                              |                 
 | hasConsent         | -                                                                                                                                                                  | Détermine si il y a eu un consentement (accepté ou non)                                           |
+| reload             | -                                                                                                                                                                  | Rechargement de la page                                                                           |
 | getCookie          | **name** *string* Nom du cookie                                                                                                                                    | Récupération de la valeur d'un cookie                                                             |
 | setCookie          | **name** *string* Nom du cookie, **value** *string* Valeur à écrire, **duration** *int* Nombre de jour avant expiration, **path** *string* Chemin de stokage       | Stocker une valeur dans cookie                                                                    |
 | removeCookie       | **name** *string* Nom du cookie, **path** *string* Chemin de stokage                                                                                               | Supprimer un cookie                                                                               |
