@@ -123,7 +123,17 @@
     /* Responsive
        ========================================================================== */
     @media screen and (max-width: 767px) {
+        top: 0;
+        left: 0;
+        transform: none;
+        max-width: none;
+        height: 100vh;
+        max-height: none;
+        border-radius: 0;
 
+        .is-cookienotice-modal-open & {
+            transform: none;
+        }
     }
 }
 
@@ -278,6 +288,10 @@
 }
 .cookienotice-service-all-label {
     margin-bottom: 20px;
+}
+.cookienotice-service-actions {
+    margin-left: 10px;
+    min-width: 152px;
 }
 .cookienotice-service-action {
     padding: 2px 10px;

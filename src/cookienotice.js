@@ -39,7 +39,7 @@
             active: 'is-active'
         },
         reload: true,
-        summary: true,
+        summary: 767,
         cookieDuration: 13*30, // 13 mois, durée max pour stocker le consentement
         afterEventsHandler: undefined,
         onChangeState: undefined
@@ -113,10 +113,6 @@
                     'class': this.settings.classes.prefix + '-notice-description',
                     html   : this.config.notice.description
                 });
-
-                if (this.config.notice.summary !== undefined && this.config.notice.summary !== '') {
-                    this.elements.noticeDescription.attr('data-summary', this.config.notice.summary);
-                }
 
                 this.elements.noticeDescription.appendTo(this.elements.noticeWrapper);
             }
@@ -353,6 +349,17 @@
          */
         eventsHandler: function () {
             var self = this;
+            
+            // Notice description
+            if (self.settings.summary !== false && self.elements.noticeDescription.length && self.config.notice.summary !== undefined && self.config.notice.summary !== '' && $(window).width() <= self.settings.summary) {
+                self.elements.noticeDescription.html(self.config.notice.summary);
+
+                self.elements.noticeDescription.on('click', function (event) {
+                    if (!$(event.target).is('a') && self.elements.noticeDescription.html() !== self.config.notice.description) {
+                        self.elements.noticeDescription.html(self.config.notice.description);
+                    }
+                });
+            }
 
             // Bouton "ok"
             if (self.elements.btnAgree !== undefined && self.elements.btnAgree.length) {

@@ -23,7 +23,7 @@ abstract class Config
                 // Contenu de la notice
                 'description' => 'En poursuivant votre navigation sur ce site, vous acceptez l\'utilisation de cookies ou technologies similaires de traçage permettant de vous offrir la meilleure expérience de navigation : conserver vos préférences, établir des statistiques de fréquentation, vous proposer des offres et des contenus adaptés à vos centres d\'intérêt y compris de partenaires tiers. Pour en savoir plus et paramétrer les cookies, <a href="/politique-de-confidentialite">consultez notre politique de confidentialité</a>.',
                 // Résumé de la notice affichée en version mobile
-                'summary' => 'En poursuivant votre navigation sur ce site, vous acceptez l\'utilisation de cookies...',
+                'summary' => 'En poursuivant votre navigation sur ce site, vous acceptez l\'utilisation de cookies... (voir plus)',
                 // Label du bouton pour personnaliser les services
                 'customize' => 'Personnaliser',
                 // Label du bouton pour accepter tous les services

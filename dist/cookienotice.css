@@ -152,6 +152,25 @@
   pointer-events: auto;
 }
 
+@media screen and (max-width: 767px) {
+  .modal--cookie {
+    top: 0;
+    left: 0;
+    -webkit-transform: none;
+        -ms-transform: none;
+            transform: none;
+    max-width: none;
+    height: 100vh;
+    max-height: none;
+    border-radius: 0;
+  }
+  .is-cookienotice-modal-open .modal--cookie {
+    -webkit-transform: none;
+        -ms-transform: none;
+            transform: none;
+  }
+}
+
 /* Overlay
    ========================================================================== */
 .cookienotice-modal-overlay {
@@ -330,6 +349,11 @@
 
 .cookienotice-service-all-label {
   margin-bottom: 1.25rem;
+}
+
+.cookienotice-service-actions {
+  margin-left: 0.625rem;
+  min-width: 152px;
 }
 
 .cookienotice-service-action {

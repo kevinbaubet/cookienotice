@@ -92,22 +92,23 @@ ___services___ : Liste des services associés aux groupes
 
 ### Options
 
-| Option                               | Type     | Valeur par défaut                                            | Description                                                            |
-|--------------------------------------|----------|--------------------------------------------------------------|------------------------------------------------------------------------|
-| siteLinks                            | function | function (body) { return body.find('a[target!="_blank"]'); } | Fonction retournant tous les liens internes du site                    |
-| classes                              | object   | Voir ci-dessous                                              | Objet pour les options ci-dessous                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;prefix       | string   | 'cookienotice'                                               | Classe de préfix                                                       |
-| &nbsp;&nbsp;&nbsp;&nbsp;notice       | string   | 'notice notice--cookie'                                      | Classe pour la notice                                                  |
-| &nbsp;&nbsp;&nbsp;&nbsp;noticeOpen   | string   | 'is-{prefix}-notice-open'                                    | Classe pour la notice à l'état ouvert                                  |
-| &nbsp;&nbsp;&nbsp;&nbsp;modal        | string   | 'modal modal--cookie'                                        | Classe pour la modale                                                  |
-| &nbsp;&nbsp;&nbsp;&nbsp;modalOpen    | string   | 'is-{prefix}-modal-open'                                     | Classe pour la modale à l'état ouvert                                  |
-| &nbsp;&nbsp;&nbsp;&nbsp;btnAgree     | string   | '{prefix}-agree'                                             | Classe du bouton pour accepter                                         |
-| &nbsp;&nbsp;&nbsp;&nbsp;btnCustomize | string   | '{prefix}-customize'                                         | Classe du bouton pour personnaliser                                    |
-| &nbsp;&nbsp;&nbsp;&nbsp;active       | string   | 'is-active'                                                  | Classe pour l'état actif d'un bouton                                   |
-| reload                               | boolean  | true                                                         | Lors du consentement, un rechargement de la page est effectué          |
-| cookieDuration                       | integer  | 13*30                                                        | Durée d'enregistrement du cookie du consentement                       |
-| afterEventsHandler                   | function | undefined                                                    | Callback après la déclaration des événements                           |
-| onChangeState                        | function | undefined                                                    | Callback une fois le choix effectué.                                   |
+| Option                               | Type     | Valeur par défaut                                            | Description                                                                     |
+|--------------------------------------|----------|--------------------------------------------------------------|---------------------------------------------------------------------------------|
+| siteLinks                            | function | function (body) { return body.find('a[target!="_blank"]'); } | Fonction retournant tous les liens internes du site                             |
+| classes                              | object   | Voir ci-dessous                                              | Objet pour les options ci-dessous                                               |
+| &nbsp;&nbsp;&nbsp;&nbsp;prefix       | string   | 'cookienotice'                                               | Classe de préfix                                                                |
+| &nbsp;&nbsp;&nbsp;&nbsp;notice       | string   | 'notice notice--cookie'                                      | Classe pour la notice                                                           |
+| &nbsp;&nbsp;&nbsp;&nbsp;noticeOpen   | string   | 'is-{prefix}-notice-open'                                    | Classe pour la notice à l'état ouvert                                           |
+| &nbsp;&nbsp;&nbsp;&nbsp;modal        | string   | 'modal modal--cookie'                                        | Classe pour la modale                                                           |
+| &nbsp;&nbsp;&nbsp;&nbsp;modalOpen    | string   | 'is-{prefix}-modal-open'                                     | Classe pour la modale à l'état ouvert                                           |
+| &nbsp;&nbsp;&nbsp;&nbsp;btnAgree     | string   | '{prefix}-agree'                                             | Classe du bouton pour accepter                                                  |
+| &nbsp;&nbsp;&nbsp;&nbsp;btnCustomize | string   | '{prefix}-customize'                                         | Classe du bouton pour personnaliser                                             |
+| &nbsp;&nbsp;&nbsp;&nbsp;active       | string   | 'is-active'                                                  | Classe pour l'état actif d'un bouton                                            |
+| reload                               | boolean  | true                                                         | Lors du consentement, un rechargement de la page est effectué                   |
+| summary                              | int/bool | 767                                                          | Largeur max en px pour afficher le résumé de la notice. "false" pour désactiver |
+| cookieDuration                       | integer  | 13*30                                                        | Durée d'enregistrement du cookie du consentement                                |
+| afterEventsHandler                   | function | undefined                                                    | Callback après la déclaration des événements                                    |
+| onChangeState                        | function | undefined                                                    | Callback une fois le choix effectué.                                            |
 
 
 ### Méthodes
