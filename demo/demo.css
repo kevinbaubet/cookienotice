@@ -5,6 +5,9 @@ body {
     font-size: .75em;
     background: #303748;
 }
+body.is-cookienotice-notice-open {
+    padding-bottom: 100px;
+}
 .page {
     position: relative;
     z-index: 10;
@@ -50,4 +53,13 @@ h2 {
     color: #868395;
     text-transform: uppercase;
     font-size: 1.2em;
+}
+h3 {
+    color: #fff;
+    font-size: 1.1em;
+}
+pre {
+    color: #fff;
+    font-size: 1.2em;
+    line-height: 1.4;
 }

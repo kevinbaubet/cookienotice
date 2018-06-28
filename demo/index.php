@@ -1,3 +1,30 @@
+<?php
+require_once '../src/CookieNotice.class.php';
+
+/*
+
+// Tester
+
+if (\CookieNotice\Service::isAllowed('facebook'))) {
+    // OK
+}
+
+// ou
+
+$state = \CookieNotice\Service::getState('facebook');
+if ($state === true) {
+    // OK
+}
+
+// Consentement enregistré ?
+if (\CookieNotice\Service::hasConsent()) {
+    // OK
+}
+
+*/
+
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -8,11 +35,22 @@
         <link rel="stylesheet" href="../dist/cookienotice.css" />
 
         <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-        
+
         <script src="../src/cookienotice.js"></script>
         <script>
             jQuery(document).ready(function ($) {
-                $('#cookie-notice').cookieNotice();
+                var cookieNotice = $('#notice-cookie').cookieNotice();
+
+                // Tester
+                // console.log(cookieNotice.isAllowed('facebook'));
+                // ou
+                // var state = cookieNotice.getState('facebook');
+                // console.log((state === true));
+                // ou
+                // console.log(($.CookieNotice.services['facebook'] === true));
+
+                // Consentement enregistré ?
+                // console.log(cookieNotice.hasConsent());
             });
         </script>
     </head>
@@ -25,12 +63,14 @@
                 <b>1ère étape :</b> une notice s'affiche pour informer l'utilisation des cookies pour une liste de services.<br />
                 <br />
                 <b>2ème étape :</b> un choix est fait si l'utilisateur :<br />
-                - clique sur le bouton de la notice et accepte l'utilisation des cookies<br />
-                - clique sur n'importe quel lien interne de la page et poursuit la navigation, ce qui vaut pour acceptation des cookies<br />
+                - clique sur le bouton de la notice "j'accepte", ce qui vaut pour acceptation de tous les cookies<br />
+                - clique sur n'importe quel lien interne de la page et poursuit la navigation, ce qui vaut pour acceptation de tous les cookies<br />
+                - personnalise les services un par un
+                <br />
                 <br />
                 <b>3ème étape :</b> dépôt d'un cookie pour enregistrer le consentement de l'utilisateur :<br />
                 - pendant une durée maximum de 13 mois<br />
-                - possiblité de changer d'avis en supprimant le cookie <b>cookienotice-agree</b><br />
+                - possiblité de changer d'avis en retournant sur la personnalisation des services<br />
                 <br />
             </p>
 
@@ -38,22 +78,16 @@
             <p>
                 Lorem ipsum dolor sit amet, <a href="">cliquer sur ce lien permet d'accepter les cookies</a>. Nisi, et reiciendis ea corrupti accusamus? Maxime nostrum deserunt assumenda consequatur magnam ipsam beatae ad facilis tenetur, ratione voluptatum error dicta iusto?
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, et reiciendis ea corrupti accusamus?
-                Nisi, et reiciendis ea corrupti accusamus? Maxime nostrum deserunt assumenda consequatur magnam ipsam beatae ad facilis tenetur, ratione voluptatum error dicta iusto?<br />
                 <br />
             </p>
+            <br />
 
-            <h2>Tester l'acceptation</h2>
+            <h2>Changer d'avis</h2>
             <p>
-                En PHP : $_COOKIE['cookienotice-agree']<br />
-                En JS : $.CookieNotice.agree<br />
+                <a href="#" class="cookienotice-customize">Gestion des cookies</a>
             </p>
         </div>
 
-        <div id="cookie-notice" class="notice notice--cookie">
-            <p>
-                En poursuivant votre navigation sur ce site, vous acceptez l’utilisation de cookies ou technologies similaires de traçage permettant de vous offrir la meilleure expérience de navigation : conserver vos préférences, établir des statistiques de fréquentation, vous proposer des offres et des contenus adaptés à vos centres d'intérêt y compris de partenaires tiers. Pour en savoir plus et paramétrer les cookies, <a href="/politique-de-confidentialite">consultez notre politique de confidentialité</a>.
-                <button>Ok, j'accepte</button>
-            </p>
-        </div>
+        <div id="notice-cookie" data-config="<?php echo \CookieNotice\Config::get(); ?>"></div>
     </body>
 </html>
