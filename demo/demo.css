@@ -2,7 +2,6 @@
 body {
     margin: 0;
     font-family: "Helvetica Neue", Helvetica, sans-serif;
-    font-size: .75em;
     background: #303748;
 }
 body.is-cookienotice-notice-open {
@@ -14,6 +13,7 @@ body.is-cookienotice-notice-open {
     width: 70%;
     max-width: 1200px;
     margin: 50px auto;
+    font-size: .75em;
 }
 body:after {
     content: "";
@@ -29,7 +29,7 @@ body:after {
 .clear {
     clear: both;
 }
-p {
+.page p {
     color: #fff;
     font-size: 1.25em;
 }
@@ -62,4 +62,15 @@ pre {
     color: #fff;
     font-size: 1.2em;
     line-height: 1.4;
+}
+
+
+.modal--cookie a {
+    text-decoration: none;
+}
+.cookienotice-service-action {
+    font-weight: bold;
+}
+.cookienotice-service-label {
+    font-style: italic;
 }

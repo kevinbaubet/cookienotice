@@ -1,3 +1,5 @@
+@import "variables";
+
 /* ==========================================================================
    Notice des cookies
    ========================================================================== */
@@ -7,21 +9,24 @@
     right: 0;
     z-index: 1000;
     display: flex;
+    align-items: center;
     width: 100%;
-    padding: 20px;
-    color: #fff;
-    background: rgba(0, 0, 0, .75);
-    box-sizing: border-box;
+    padding: $notice-cookie--gutter-width;
+    font-size: $notice-cookie--font-size;
+    color: $notice-cookie--color;
+    background: rgba($notice-cookie--color-background, .75);
     transform: translateY(100%);
+    visibility: hidden;
     transition: transform .3s;
+    box-sizing: border-box;
 
     .is-cookienotice-notice-open & {
         transform: translateY(0);
+        visibility: visible;
     }
 
     p {
         margin: 0;
-        font-size: 13px;
     }
     a {
         color: inherit;
@@ -38,55 +43,54 @@
         margin-left: 20px;
     }
     button {
-        padding: 5px 10px;
-        height: 40px;
-        color: #000;
+        padding: $notice-cookie--padding-vertical $notice-cookie--padding-horizontal;
+        color: $notice-cookie--color-background;
         font-weight: bold;
-        background-color: #fff;
-        border: 0;
+        background-color: $notice-cookie--color;
+        border: 1px solid transparent;
         border-radius: 20px;
         cursor: pointer;
         transition: .3s;
         white-space: nowrap;
 
-        + button {
+        & + button {
             margin-left: 10px;
         }
 
         &:hover,
         &:focus {
-            color: #fff;
-            background-color: #000;
+            color: $notice-cookie--color;
+            background-color: $notice-cookie--color-background;
+            border-color: $notice-cookie--color-background;
         }
     }
     .cookienotice-customize {
-        padding: 2px 8px;
-        height: 32px;
-        font-size: 10px;
+        background-color: transparent;
+        color: $notice-cookie--color;
+        border-color: $notice-cookie--color;
+        text-transform: none;
+    }
+    .cookienotice-agree {
+        text-transform: uppercase;
     }
 
     /* Responsive
        ========================================================================== */
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: $breakpoint--smartphone) {
         flex-direction: column;
-        padding: 10px;
-
-        p {
-            line-height: 1.2;
-        }
 
         .cookienotice-notice-actions {
-            margin-top: 10px;
+            margin-top: $notice-cookie--gutter-width;
             justify-content: center;
-
         }
 
         .is-cookienotice-notice-open & {
-            visibility: visible;
             bottom: 0;
         }
     }
 }
+
+
 
 
 /* ==========================================================================
@@ -94,27 +98,31 @@
    ========================================================================== */
 .modal--cookie {
     position: fixed;
-    top: 10vh;
+    top: 50%;
     left: 50%;
+    transform: translate3d(-50%, -50%, 0);
     z-index: -1;
     width: 100%;
     max-width: 800px;
     max-height: 80vh;
-    padding: 20px;
+    padding: $v-align 4%;
     background: #fff;
     box-shadow: 0 0 15px rgba(0, 0, 0, .2);
-    box-sizing: border-box;
     border-radius: 8px;
-    transform: translate3d(-50%, -10px, 0);
-    transition: opacity .3s, transform .3s;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
     overflow: auto;
+    box-sizing: border-box;
+    transition: opacity .3s, transform .3s;
+
+    h3,
+    p {
+        margin:  0 0 $v-align/2;
+    }
 
     .is-cookienotice-modal-open & {
         z-index: 1005;
-        transform: translate3d(-50%, 0, 0);
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
@@ -122,11 +130,10 @@
 
     /* Responsive
        ========================================================================== */
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: $breakpoint--smartphone) {
         top: 0;
         left: 0;
         transform: none;
-        max-width: none;
         height: 100vh;
         max-height: none;
         border-radius: 0;
@@ -162,35 +169,21 @@
 
     /* Responsive
      ========================================================================== */
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: $breakpoint--smartphone) {
         display: none;
     }
 }
 
-/* Header
-   ========================================================================== */
-.cookienotice-modal-header {
-    position: relative;
-    padding-right: 50px;
-    margin-bottom: 40px;
-}
-.cookienotice-modal-label {
-    margin: 20px 10px 20px 0;
-    color: #303748;
-}
-.cookienotice-modal-description {
-    padding-bottom: 20px;
-    color: inherit;
-}
-.cookienotice-modal-close {
+/* Close btn
+========================================================================== */
+.cookienotice-modal-close { $s: 40px;
     position: absolute;
-    top: -20px;
-    right: 0;
+    top: 0;
+    right: -10px;
     z-index: 5;
-    display: inline-block;
     padding: 0;
-    width: 40px;
-    height: 40px;
+    width: $s;
+    height: $s;
     text-indent: -9999px;
     background: none;
     border: 0;
@@ -200,7 +193,7 @@
 
     &:hover,
     &:focus {
-        background-color: #303748;
+        background-color: $notice-cookie-modal--color;
 
         &:before,
         &:after {
@@ -209,15 +202,15 @@
     }
 
     &:before,
-    &:after {
+    &:after { $w: 16px;
         content: "";
         position: absolute;
-        top: 19px;
-        right: 12px;
+        top: $s/2;
+        right: ($s - $w)/2;
         z-index: 5;
-        width: 16px;
+        width: $w;
         height: 2px;
-        background: #303748;
+        background: $notice-cookie-modal--color;
         transform: rotate(-45deg);
         transition: background-color .3s;
     }
@@ -226,10 +219,26 @@
     }
 }
 
+/* Header
+   ========================================================================== */
+.cookienotice-modal-header {
+    position: relative;
+    padding-right: 50px;
+
+    .cookienotice-modal-label {
+        margin: 0 20px $v-align/2 0;
+        color: $notice-cookie-modal--color;
+    }
+    .cookienotice-modal-description {
+        margin: $v-align/2 0;
+        padding-bottom: $v-align/2;
+    }
+}
+
 /* Groupes
    ========================================================================== */
 .cookienotice-group {
-    padding: 20px 0;
+    padding: $v-align/2 0;
 
     &:after {
         height: 1px;
@@ -239,27 +248,23 @@
     }
 
     h3 {
-        color: inherit;
-    }
-    p {
-        color: inherit;
-        font-size: 13px;
+        color: $notice-cookie-modal--color-primary;
     }
 }
 .cookienotice-modal-header,
 .cookienotice-service--all,
 .cookienotice-group {
     position: relative;
+    margin-bottom: $v-align;
 
     &:after {
         content: "";
         position: absolute;
-        bottom: -2px;
+        bottom: -$v-align/2;
         left: 0;
-        z-index: 5;
         width: 150px;
         height: 2px;
-        background: #868395;
+        background: $notice-cookie-modal--color-primary;
     }
 }
 
@@ -276,36 +281,34 @@
 }
 .cookienotice-service {
     display: flex;
+    flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0 10px 10px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(#000, .1);
 }
-.cookienotice-service--all {
-    padding-left: 0;
+.cookienotice-group .cookienotice-service:last-of-type {
+    border-bottom: 0;
 }
 .cookienotice-service-label {
-    font-weight: bold;
-}
-.cookienotice-service-all-label {
-    margin-bottom: 20px;
+
 }
 .cookienotice-service-actions {
-    margin-left: 10px;
-    min-width: 152px;
+    //min-width: 280px;
+    text-align: right;
 }
 .cookienotice-service-action {
-    padding: 2px 10px;
+    padding: 0 14px;
     height: 32px;
     color: #fff;
-    font-weight: bold;
-    background-color: #868395;
+    background-color: $notice-cookie-modal--color-primary;
     border: 0;
-    border-radius: 20px;
+    border-radius: 15px;
     cursor: pointer;
     transition: .3s;
     white-space: nowrap;
 
-    + .cookienotice-service-action {
+    & + & {
         margin-left: 10px;
     }
 }
@@ -321,5 +324,25 @@
     &:focus,
     &.is-active {
         background-color: #d9534f;
+    }
+}
+
+.cookienotice-service--all {
+    border-bottom: 0;
+}
+.cookienotice-service-all-label {
+    margin-bottom: 0;
+}
+
+
+@media screen and (max-width: 500px) {
+    .cookienotice-service {
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+    }
+    .cookienotice-service-actions {
+        margin-top: 10px;
+        min-width: 0;
     }
 }
