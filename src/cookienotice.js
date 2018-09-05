@@ -177,7 +177,7 @@
                 });
 
                 if (self.config.modal.label !== undefined && self.config.modal.label !== '') {
-                    $('<h1>', {
+                    $('<p>', {
                         'class': self.settings.classes.prefix + '-modal-label',
                         html   : self.config.modal.label
                     }).appendTo(self.elements.modalHeader);
@@ -221,7 +221,7 @@
                             'data-service': 'all'
                         });
 
-                        $('<h2>', {
+                        $('<p>', {
                             'class': self.settings.classes.prefix + '-service-all-label',
                             html   : self.config.services.all.label
                         }).appendTo(self.elements.serviceAllWrapper);
@@ -238,12 +238,14 @@
                         }).appendTo(groupsList);
 
                         if (self.config.groups[group].label !== undefined && self.config.groups[group].label !== '') {
-                            $('<h3>', {
+                            $('<p>', {
+                                'class': self.settings.classes.prefix + '-group--label',
                                 html: self.config.groups[group].label
                             }).appendTo(groupWrapper);
                         }
                         if (self.config.groups[group].description !== undefined && self.config.groups[group].description !== '') {
                             $('<p>', {
+                                'class': self.settings.classes.prefix + '-group--description',
                                 html: self.config.groups[group].description
                             }).appendTo(groupWrapper);
                         }

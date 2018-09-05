@@ -1,5 +1,6 @@
 <?php
-require_once '../src/CookieNotice.class.php';
+require_once '../src/CookieNotice/Config.php';
+require_once '../src/CookieNotice/Service.php';
 
 /*
 

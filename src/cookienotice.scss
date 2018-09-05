@@ -105,7 +105,7 @@
     width: 100%;
     max-width: 800px;
     max-height: 80vh;
-    padding: $v-align 4%;
+    padding: $v-align 2.5%;
     background: #fff;
     box-shadow: 0 0 15px rgba(0, 0, 0, .2);
     border-radius: 8px;
@@ -116,7 +116,6 @@
     box-sizing: border-box;
     transition: opacity .3s, transform .3s;
 
-    h3,
     p {
         margin:  0 0 $v-align/2;
     }
@@ -228,6 +227,9 @@
     .cookienotice-modal-label {
         margin: 0 20px $v-align/2 0;
         color: $notice-cookie-modal--color;
+        font-size: 2em;
+        font-weight: bold;
+        text-transform: uppercase;
     }
     .cookienotice-modal-description {
         margin: $v-align/2 0;
@@ -246,10 +248,6 @@
     &:last-child:after {
         display: none;
     }
-
-    h3 {
-        color: $notice-cookie-modal--color-primary;
-    }
 }
 .cookienotice-modal-header,
 .cookienotice-service--all,
@@ -266,6 +264,11 @@
         height: 2px;
         background: $notice-cookie-modal--color-primary;
     }
+}
+.cookienotice-group--label {
+    color: $notice-cookie-modal--color-primary;
+    font-size: 1.1em;
+    font-weight: bold;
 }
 
 /* Services
@@ -290,11 +293,7 @@
 .cookienotice-group .cookienotice-service:last-of-type {
     border-bottom: 0;
 }
-.cookienotice-service-label {
-
-}
 .cookienotice-service-actions {
-    //min-width: 280px;
     text-align: right;
 }
 .cookienotice-service-action {
@@ -331,6 +330,12 @@
     border-bottom: 0;
 }
 .cookienotice-service-all-label {
+    color: $notice-cookie-modal--color-primary;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+p.cookienotice-service-all-label {
     margin-bottom: 0;
 }
 
