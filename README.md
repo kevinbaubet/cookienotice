@@ -20,7 +20,8 @@
 
 ## Initialisation
 
-    <?php require_once '../src/CookieNotice.class.php'; // A configurer ?>
+    <?php require_once '../src/CookieNotice/Config.php'; // A configurer ?>
+    <?php require_once '../src/CookieNotice/Service.php'; // Optionnel ?>
     
     <div id="notice-cookie" data-config="<?php echo \CookieNotice\Config::get(); ?>"></div>
     
