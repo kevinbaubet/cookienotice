@@ -32,7 +32,7 @@
 
 ### Configuration (obligatoire)
 
-La configuration de **CookieNotice** se passe dans le fichier _CookieNotice.class.php_ dans la méthode _Config::set()_.
+La configuration de **CookieNotice** se passe dans le fichier _CookieNotice/Config.php_ dans la méthode _Config::set()_.
 C'est à vous de gérer la traduction en fonction de vos préférences.
 
 ___notice___ : Configuration du bandeau notice
