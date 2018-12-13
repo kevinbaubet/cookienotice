@@ -108,6 +108,8 @@ ___services___ : Liste des services associés aux groupes
 | reload                               | boolean  | true                                                         | Lors du consentement, un rechargement de la page est effectué                   |
 | summary                              | int/bool | 767                                                          | Largeur max en px pour afficher le résumé de la notice. "false" pour désactiver |
 | cookieDuration                       | integer  | 13*30                                                        | Durée d'enregistrement du cookie du consentement                                |
+| afterWrapNotice                      | function | undefined                                                    | Callback après l'ajout de la notice dans la page                                |
+| afterWrapModal                       | function | undefined                                                    | Callback après l'ajout de la modale dans la page                                |
 | afterEventsHandler                   | function | undefined                                                    | Callback après la déclaration des événements                                    |
 | onChangeState                        | function | undefined                                                    | Callback une fois le choix effectué.                                            |
 
@@ -129,6 +131,7 @@ ___services___ : Liste des services associés aux groupes
 | getCookie          | **name** *string* Nom du cookie                                                                                                                                    | Récupération de la valeur d'un cookie                                                             |
 | setCookie          | **name** *string* Nom du cookie, **value** *string* Valeur à écrire, **duration** *int* Nombre de jour avant expiration, **path** *string* Chemin de stokage       | Stocker une valeur dans cookie                                                                    |
 | removeCookie       | **name** *string* Nom du cookie, **path** *string* Chemin de stokage                                                                                               | Supprimer un cookie                                                                               |
+| destroy            | -                                                                                                                                                                  | Supprime CookieNotice de la page                                                                  |
 
 
 ### Tester les choix des services

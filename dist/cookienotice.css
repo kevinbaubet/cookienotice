@@ -18,11 +18,9 @@
   color: #fff;
   background: rgba(0, 0, 0, 0.75);
   -webkit-transform: translateY(100%);
-      -ms-transform: translateY(100%);
           transform: translateY(100%);
   visibility: hidden;
   -webkit-transition: .3s;
-  -o-transition: .3s;
   transition: .3s;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -32,12 +30,14 @@
 
 .is-cookienotice-notice-open .notice--cookie {
   -webkit-transform: translateY(0);
-      -ms-transform: translateY(0);
           transform: translateY(0);
   visibility: visible;
 }
 
 .notice--cookie p {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
   margin: 0;
 }
 
@@ -60,7 +60,7 @@
   margin-left: 1.25rem;
 }
 
-.notice--cookie button {
+.notice--cookie .cookienotice-btn {
   padding: 0.625rem 0.938rem;
   color: #000;
   font-weight: bold;
@@ -69,30 +69,30 @@
   border-radius: 20px;
   cursor: pointer;
   -webkit-transition: .3s;
-  -o-transition: .3s;
   transition: .3s;
   white-space: nowrap;
 }
 
-.notice--cookie button + button {
+.notice--cookie .cookienotice-btn + .cookienotice-btn {
   margin-left: 0.625rem;
 }
 
-.notice--cookie button:hover, .notice--cookie button:focus {
+.notice--cookie .cookienotice-btn:hover, .notice--cookie .cookienotice-btn:focus {
   color: #fff;
+  text-decoration: none;
   background-color: #000;
   border-color: #000;
 }
 
-.notice--cookie .cookienotice-customize {
+.notice--cookie .cookienotice-btn--primary {
+  text-transform: uppercase;
+}
+
+.notice--cookie .cookienotice-btn--secondary {
   background-color: transparent;
   color: #fff;
   border-color: #fff;
   text-transform: none;
-}
-
-.notice--cookie .cookienotice-agree {
-  text-transform: uppercase;
 }
 
 @media screen and (max-width: 767px) {
@@ -139,7 +139,6 @@
           box-sizing: border-box;
   -webkit-transition: opacity .3s, -webkit-transform .3s;
   transition: opacity .3s, -webkit-transform .3s;
-  -o-transition: opacity .3s, transform .3s;
   transition: opacity .3s, transform .3s;
   transition: opacity .3s, transform .3s, -webkit-transform .3s;
   /* Responsive
@@ -162,7 +161,6 @@
     top: 0;
     left: 0;
     -webkit-transform: none;
-        -ms-transform: none;
             transform: none;
     height: 100vh;
     max-height: none;
@@ -170,7 +168,6 @@
   }
   .is-cookienotice-modal-open .modal--cookie {
     -webkit-transform: none;
-        -ms-transform: none;
             transform: none;
   }
 }
@@ -190,7 +187,6 @@
   pointer-events: none;
   overflow: auto;
   -webkit-transition: opacity .3s;
-  -o-transition: opacity .3s;
   transition: opacity .3s;
   /* Responsive
      ========================================================================== */
@@ -225,7 +221,6 @@
   border-radius: 50%;
   cursor: pointer;
   -webkit-transition: background-color .3s;
-  -o-transition: background-color .3s;
   transition: background-color .3s;
 }
 
@@ -247,16 +242,13 @@
   height: 2px;
   background: #303748;
   -webkit-transform: rotate(-45deg);
-      -ms-transform: rotate(-45deg);
           transform: rotate(-45deg);
   -webkit-transition: background-color .3s;
-  -o-transition: background-color .3s;
   transition: background-color .3s;
 }
 
 .cookienotice-modal-close:after {
   -webkit-transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
           transform: rotate(45deg);
 }
 
@@ -363,7 +355,6 @@
   border-radius: 15px;
   cursor: pointer;
   -webkit-transition: .3s;
-  -o-transition: .3s;
   transition: .3s;
   white-space: nowrap;
 }

@@ -18,7 +18,7 @@
 
         // Init
         if (this.prepareOptions()) {
-            return this.load();
+            return this.init();
         }
 
         return false;
@@ -41,6 +41,8 @@
         reload: true,
         summary: 767,
         cookieDuration: 13*30, // 13 mois, durée max pour stocker le consentement
+        afterWrapNotice: undefined,
+        afterWrapModal: undefined,
         afterEventsHandler: undefined,
         onChangeState: undefined
     };
@@ -83,7 +85,7 @@
         /**
          * Initialisation
          */
-        load: function () {
+        init: function () {
             this.wrapNotice();
 
             // Si les états des services n'ont pas pu être récupérés depuis le cookie, c'est qu'il n'y a pas eu encore le consentement
@@ -94,6 +96,18 @@
 
             this.wrapModal();
             this.eventsHandler();
+
+            return this;
+        },
+
+        /**
+         * Destruction
+         */
+        destroy: function () {
+            this.elements.container.remove();
+            this.elements.body
+                .removeClass(this.settings.classes.noticeOpen)
+                .removeClass(this.settings.classes.modalOpen);
 
             return this;
         },
@@ -125,7 +139,7 @@
             if (this.config.modal !== undefined && this.config.notice.customize !== undefined && this.config.notice.customize !== '') {
                 var btnsCustomize = [];
                 var btnCustomize = $('<button>', {
-                    'class': this.settings.classes.btnCustomize,
+                    'class': this.settings.classes.prefix + '-btn ' + this.settings.classes.prefix + '-btn--secondary ' + this.settings.classes.btnCustomize,
                     html: this.config.notice.customize
                 }).appendTo(this.elements.noticeActionsWrapper);
                 var btnCustomizeInBody = this.elements.body.find('.' + this.settings.classes.btnCustomize);
@@ -139,13 +153,21 @@
             }
             if (this.config.notice.agree !== undefined && this.config.notice.agree !== '') {
                 this.elements.btnAgree = $('<button>', {
-                    'class': this.settings.classes.btnAgree,
+                    'class': this.settings.classes.prefix + '-btn ' + this.settings.classes.prefix + '-btn--primary ' + this.settings.classes.btnAgree,
                     html: this.config.notice.agree
                 }).appendTo(this.elements.noticeActionsWrapper);
             }
 
             this.elements.noticeActionsWrapper.appendTo(this.elements.noticeWrapper);
             this.elements.noticeWrapper.appendTo(this.elements.container);
+
+            // User callback
+            if (this.settings.afterWrapNotice !== undefined) {
+                this.settings.afterWrapNotice.call({
+                    cookieNotice: this,
+                    elements: this.elements
+                });
+            }
 
             return this;
         },
@@ -290,6 +312,14 @@
                 self.elements.modalOverlay = $('<div>', {
                     'class': self.settings.classes.prefix + '-modal-overlay'
                 }).appendTo(self.elements.container);
+
+                // User callback
+                if (self.settings.afterWrapModal !== undefined) {
+                    self.settings.afterWrapModal.call({
+                        cookieNotice: self,
+                        elements: self.elements
+                    });
+                }
             }
 
             return self;
@@ -314,10 +344,10 @@
                     if (service === 'all') {
                         var count = 0;
                         $.each($.CookieNotice.services, function (allService, allState) {
-                             if (action === 'agree' && allState === true) {
-                                 count++;
-                             } else if (action === 'disagree' && allState === false) {
-                                 count++;
+                            if (action === 'agree' && allState === true) {
+                                count++;
+                            } else if (action === 'disagree' && allState === false) {
+                                count++;
                             }
                         });
 
@@ -351,7 +381,7 @@
          */
         eventsHandler: function () {
             var self = this;
-            
+
             // Notice description
             if (self.settings.summary !== false && self.elements.noticeDescription.length && self.config.notice.summary !== undefined && self.config.notice.summary !== '' && $(window).width() <= self.settings.summary) {
                 self.elements.noticeDescription.html(self.config.notice.summary);

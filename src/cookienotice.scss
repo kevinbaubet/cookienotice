@@ -26,6 +26,7 @@
     }
 
     p {
+        flex-grow: 1;
         margin: 0;
     }
     a {
@@ -42,7 +43,7 @@
         align-items: center;
         margin-left: 20px;
     }
-    button {
+    .cookienotice-btn {
         padding: $notice-cookie--padding-vertical $notice-cookie--padding-horizontal;
         color: $notice-cookie--color-background;
         font-weight: bold;
@@ -53,25 +54,26 @@
         transition: .3s;
         white-space: nowrap;
 
-        & + button {
+        + .cookienotice-btn {
             margin-left: 10px;
         }
 
         &:hover,
         &:focus {
             color: $notice-cookie--color;
+            text-decoration: none;
             background-color: $notice-cookie--color-background;
             border-color: $notice-cookie--color-background;
         }
     }
-    .cookienotice-customize {
+    .cookienotice-btn--primary {
+        text-transform: uppercase;
+    }
+    .cookienotice-btn--secondary {
         background-color: transparent;
         color: $notice-cookie--color;
         border-color: $notice-cookie--color;
         text-transform: none;
-    }
-    .cookienotice-agree {
-        text-transform: uppercase;
     }
 
     /* Responsive
