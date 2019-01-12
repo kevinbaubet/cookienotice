@@ -3,7 +3,7 @@
 
     $.CookieNotice = function (container, options) {
         // Config
-        $.extend((this.settings = {}), $.CookieNotice.defaults, options);
+        $.extend(true, (this.settings = {}), $.CookieNotice.defaults, options);
 
         // Élements
         this.elements = {
