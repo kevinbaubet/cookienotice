@@ -102,8 +102,8 @@ ___services___ : Liste des services associés aux groupes
 | &nbsp;&nbsp;&nbsp;&nbsp;noticeOpen   | string   | 'is-{prefix}-notice-open'                                    | Classe pour la notice à l'état ouvert                                           |
 | &nbsp;&nbsp;&nbsp;&nbsp;modal        | string   | 'modal modal--cookie'                                        | Classe pour la modale                                                           |
 | &nbsp;&nbsp;&nbsp;&nbsp;modalOpen    | string   | 'is-{prefix}-modal-open'                                     | Classe pour la modale à l'état ouvert                                           |
-| &nbsp;&nbsp;&nbsp;&nbsp;btnAgree     | string   | '{prefix}-agree'                                             | Classe du bouton pour accepter                                                  |
-| &nbsp;&nbsp;&nbsp;&nbsp;btnCustomize | string   | '{prefix}-customize'                                         | Classe du bouton pour personnaliser                                             |
+| &nbsp;&nbsp;&nbsp;&nbsp;btnAgree     | string   | '{prefix}-agree'                                             | Classe du bouton pour accepter (ex: 'btn btn--primary')                         |
+| &nbsp;&nbsp;&nbsp;&nbsp;btnCustomize | string   | '{prefix}-customize'                                         | Classe du bouton pour personnaliser (ex: 'btn btn--secondary')                  |
 | &nbsp;&nbsp;&nbsp;&nbsp;active       | string   | 'is-active'                                                  | Classe pour l'état actif d'un bouton                                            |
 | reload                               | boolean  | true                                                         | Lors du consentement, un rechargement de la page est effectué                   |
 | summary                              | int/bool | 767                                                          | Largeur max en px pour afficher le résumé de la notice. "false" pour désactiver |
@@ -111,7 +111,7 @@ ___services___ : Liste des services associés aux groupes
 | afterWrapNotice                      | function | undefined                                                    | Callback après l'ajout de la notice dans la page                                |
 | afterWrapModal                       | function | undefined                                                    | Callback après l'ajout de la modale dans la page                                |
 | afterEventsHandler                   | function | undefined                                                    | Callback après la déclaration des événements                                    |
-| onChangeState                        | function | undefined                                                    | Callback une fois le choix effectué.                                            |
+| onChangeState                        | function | undefined                                                    | Callback une fois le choix effectué                                             |
 
 
 ### Méthodes
@@ -141,17 +141,15 @@ ___services___ : Liste des services associés aux groupes
     if (cookieNotice.isAllowed('facebook')) {
         // OK
     }
+    
+    // ou
 
     var state = cookieNotice.getState('facebook');
     if (state === true) {
         // OK
     }
-
-    if ($.CookieNotice.services['facebook'] === true) {
-        // OK
-    }
     
-    Il y a-t-il un consentement enregistré ?
+    // Il y a-t-il un consentement enregistré ?
     if (cookieNotice.hasConsent()) {
         // OK
     }
