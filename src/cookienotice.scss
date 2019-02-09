@@ -102,21 +102,20 @@
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate3d(-50%, -50%, 0);
     z-index: -1;
+    transform: translate3d(-50%, -50%, 0);
     width: 100%;
     max-width: 800px;
     max-height: 80vh;
     padding: $v-align 2.5%;
     background: #fff;
-    box-shadow: 0 0 15px rgba(0, 0, 0, .2);
     border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, .2);
+    box-sizing: border-box;
     opacity: 0;
     visibility: hidden;
-    pointer-events: none;
     overflow: auto;
-    box-sizing: border-box;
-    transition: opacity .3s, transform .3s;
+    transition: .2s;
 
     p {
         margin:  0 0 $v-align/2;
@@ -126,7 +125,6 @@
         z-index: 1005;
         opacity: 1;
         visibility: visible;
-        pointer-events: auto;
     }
 
     /* Responsive

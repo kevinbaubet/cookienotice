@@ -26,6 +26,7 @@ function watchsass() {
 function minify(pumpCallback) {
     return plugins.pump([
         plugins.gulp.src('./src/**/*.js'),
+        plugins.uglify(),
         plugins.rename(function (path) {
             path.extname = '.min.js'
         }),
