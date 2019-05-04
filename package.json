@@ -1,8 +1,11 @@
 {
-  "name": "cookienotice",
+  "name": "@kevinbaubet/cookienotice",
   "version": "3.0.5",
   "main": "./dist/cookienotice.min.js",
-  "repository": "https://github.com/kevinbaubet/cookienotice.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevinbaubet/fixer.git"
+  },
   "author": "Kévin Baubet <contact@kevinbaubet.fr>",
   "license": "MIT",
   "dependencies": {
