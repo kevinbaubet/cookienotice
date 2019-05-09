@@ -36,9 +36,7 @@
     "replace": true,
     "unitPrecision": 3,
     "propList": [
-      "font-size",
-      "padding*",
-      "margin*"
+      "font-size"
     ]
   }
 }

@@ -74,3 +74,22 @@ pre {
 .cookienotice-service-label {
     font-style: italic;
 }
+
+.cookienotice-btn {
+    padding: 10px 15px;
+    font-weight: bold;
+    border: 1px solid transparent;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: .3s;
+    white-space: nowrap;
+}
+.cookienotice-btn:hover,
+.cookienotice-btn:focus {
+     text-decoration: none;
+}
+.cookienotice-btn--secondary {
+    background-color: transparent;
+    color: #fff;
+    border-color: #fff;
+}
