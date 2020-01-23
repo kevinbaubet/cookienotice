@@ -40,6 +40,7 @@ ___notice___ : Configuration du bandeau notice
 * _summary_ : Résumé de la notice affichée en version mobile
 * _customize_ : Label du bouton pour personnaliser les services
 * _agree_ : Label du bouton pour accepter tous les services
+* _disagree_ : Label du bouton pour refuser tous les services
    
 ___modal___ : Configuration de la popup pour personnaliser les services. Commentez cette partie pour ne pas autoriser la personnalisation des services
 * _label_ : Nom de la popup
@@ -105,7 +106,7 @@ ___services___ : Liste des services associés aux groupes
 | &nbsp;&nbsp;&nbsp;&nbsp;btnAgree     | string   | '{prefix}-agree'                                             | Classe du bouton pour accepter (ex: 'btn btn--primary')                         |
 | &nbsp;&nbsp;&nbsp;&nbsp;btnCustomize | string   | '{prefix}-customize'                                         | Classe du bouton pour personnaliser (ex: 'btn btn--secondary')                  |
 | &nbsp;&nbsp;&nbsp;&nbsp;active       | string   | 'is-active'                                                  | Classe pour l'état actif d'un bouton                                            |
-| reload                               | boolean  | true                                                         | Lors du consentement, un rechargement de la page est effectué                   |
+| reload                               | boolean  | false                                                        | Lors du consentement, un rechargement de la page est effectué                   |
 | summary                              | int/bool | 767                                                          | Largeur max en px pour afficher le résumé de la notice. "false" pour désactiver |
 | cookieDuration                       | integer  | 13*30                                                        | Durée d'enregistrement du cookie du consentement                                |
 | afterWrapNotice                      | function | undefined                                                    | Callback après l'ajout de la notice dans la page                                |

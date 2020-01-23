@@ -35,10 +35,11 @@
             modal: 'modal modal--cookie',
             modalOpen: 'is-{prefix}-modal-open',
             btnAgree: '{prefix}-agree',
+            btnDisagree: '{prefix}-disagree',
             btnCustomize: '{prefix}-customize',
             active: 'is-active'
         },
-        reload: true,
+        reload: false,
         summary: 767,
         cookieDuration: 13*30, // 13 mois, durée max pour stocker le consentement
         afterWrapNotice: undefined,
@@ -163,6 +164,15 @@
                     'class': this.settings.classes.prefix + '-btn ' + this.settings.classes.prefix + '-btn--primary ' + this.settings.classes.btnAgree,
                     html: $('<span>', {
                         html: this.config.notice.agree
+                    })
+                }).appendTo(this.elements.noticeActionsWrapper);
+            }
+
+            if (this.config.notice.disagree !== undefined && this.config.notice.disagree !== '') {
+                this.elements.btnDisagree = $('<button>', {
+                    'class': this.settings.classes.prefix + '-btn ' + this.settings.classes.prefix + '-btn--secondary ' + this.settings.classes.btnDisagree,
+                    html: $('<span>', {
+                        html: this.config.notice.disagree
                     })
                 }).appendTo(this.elements.noticeActionsWrapper);
             }
@@ -425,6 +435,27 @@
                             btn = $(btn);
 
                             if (btn.attr('data-action') === 'agree') {
+                                btn.addClass(self.settings.classes.active);
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Button disagree
+            if (self.elements.btnDisagree !== undefined && self.elements.btnDisagree.length) {
+                self.elements.btnDisagree.one('click.cookienotice.btnDisagree', function () {
+                    self.disagree();
+                    self.notice('hide');
+
+                    if (self.settings.reload) {
+                        self.reload();
+
+                    } else if (self.elements.serviceAction.length) {
+                        self.elements.serviceAction.each(function (i, btn) {
+                            btn = $(btn);
+
+                            if (btn.attr('data-action') === 'disagree') {
                                 btn.addClass(self.settings.classes.active);
                             }
                         });

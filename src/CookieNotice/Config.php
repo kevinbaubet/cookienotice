@@ -25,9 +25,11 @@ abstract class Config
                 // Résumé de la notice affichée en version mobile
                 'summary' => 'En poursuivant votre navigation sur ce site, vous acceptez l\'utilisation de cookies... (voir plus)',
                 // Label du bouton pour personnaliser les services
-                'customize' => 'Personnaliser',
+                'customize' => 'Je choisis',
                 // Label du bouton pour accepter tous les services
-                'agree' => 'Ok, j\'accepte'
+                'agree' => 'Ok, j\'accepte',
+                // Label du bouton pour refuster tous les services
+                'disagree' => 'Je refuse'
             ],
             // Configuration de la popup pour personnaliser les services. Commentez cette partie pour ne pas autoriser la personnalisation des services
             'modal' => [
@@ -72,9 +74,9 @@ abstract class Config
                     // Nom du service
                     'label' => 'Préférences pour tous les services',
                     // Label du bouton "autoriser"
-                    'agree' => 'Autoriser',
+                    'agree' => 'J\'accepte',
                     // Label du bouton "interdire"
-                    'disagree' => 'Interdire'
+                    'disagree' => 'Je refuse'
                 ],
 
                 // ANALYTICS

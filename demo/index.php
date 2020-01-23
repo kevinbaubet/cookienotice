@@ -65,6 +65,7 @@ if (\CookieNotice\Service::hasConsent()) {
                 <br />
                 <b>2ème étape :</b> un choix est fait si l'utilisateur :<br />
                 - clique sur le bouton de la notice "j'accepte", ce qui vaut pour acceptation de tous les cookies<br />
+                - clique sur le bouton de la notice "je refuse", ce qui interdit l'installation de tous les cookies<br />
                 - clique sur n'importe quel lien interne de la page et poursuit la navigation, ce qui vaut pour acceptation de tous les cookies<br />
                 - personnalise les services un par un
                 <br />
