@@ -149,7 +149,7 @@
                     })
                 }).appendTo(this.elements.noticeActionsWrapper);
 
-                btnCustomizeInBody = this.elements.body.find('.' + this.settings.classes.btnCustomize);
+                btnCustomizeInBody = this.elements.body.find('.' + this.settings.classes.prefix + '-customize');
                 btnsCustomize.push(btnCustomize.get(0));
 
                 if (btnCustomizeInBody.length) {
