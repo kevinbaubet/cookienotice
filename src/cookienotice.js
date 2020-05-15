@@ -220,19 +220,19 @@
                 if (self.config.modal.label !== undefined && self.config.modal.label !== '') {
                     $('<p>', {
                         'class': self.settings.classes.prefix + '-modal-label',
-                        html   : self.config.modal.label
+                        html: self.config.modal.label
                     }).appendTo(self.elements.modalHeader);
                 }
                 if (self.config.modal.description !== undefined && self.config.modal.description !== '') {
-                    $('<p>', {
+                    $('<div>', {
                         'class': self.settings.classes.prefix + '-modal-description',
-                        html   : self.config.modal.description
+                        html: self.config.modal.description
                     }).appendTo(self.elements.modalHeader);
                 }
                 if (self.config.modal.close !== undefined && self.config.modal.close !== '') {
                     self.elements.modalClose = $('<button>', {
                         'class': self.settings.classes.prefix + '-modal-close',
-                        html   : $('<span>', {
+                        html: $('<span>', {
                             html: self.config.modal.close
                         })
                     }).appendTo(self.elements.modalHeader);
@@ -414,7 +414,15 @@
          * @param action "show" ou "hide"
          */
         modal: function (action) {
-            this.elements.body[(action === 'hide' ? 'remove' : 'add') + 'Class'](this.settings.classes.modalOpen);
+            var self = this;
+
+            self.elements.body[(action === 'hide' ? 'remove' : 'add') + 'Class'](self.settings.classes.modalOpen);
+
+            if (action === 'show') {
+                setTimeout(function () {
+                    self.elements.modalWrapper.focus();
+                }, 100);
+            }
         },
 
         /**

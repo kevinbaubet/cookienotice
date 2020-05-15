@@ -96,6 +96,10 @@
     overflow: auto;
     transition: .2s;
 
+    &:focus {
+        border: 1px dotted inherit;
+    }
+
     p {
         margin:  0 0 $v-align/2;
     }

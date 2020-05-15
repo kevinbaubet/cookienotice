@@ -117,6 +117,10 @@
        ========================================================================== */
 }
 
+.modal--cookie:focus {
+  border: 1px dotted inherit;
+}
+
 .modal--cookie p {
   margin: 0 0 20px;
 }

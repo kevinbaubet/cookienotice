@@ -35,7 +35,7 @@ abstract class Config {
                 // Nom de la popup
                 'label' => 'Gestion de vos préférences sur les cookies',
                 // Description de la popup (optionnel)
-                'description' => 'En autorisant ces services tiers, vous acceptez le dépôt et la lecture de cookies et l\'utilisation de technologies de suivi nécessaires à leur bon fonctionnement.',
+                'description' => '<p>En autorisant ces services tiers, vous acceptez le dépôt et la lecture de cookies et l\'utilisation de technologies de suivi nécessaires à leur bon fonctionnement.</p>',
                 // Nom du bouton de fermeture
                 'close' => 'Fermer'
             ],
