@@ -44,6 +44,7 @@ ___notice___ : Configuration du bandeau notice
    
 ___modal___ : Configuration de la popup pour personnaliser les services. Commentez cette partie pour ne pas autoriser la personnalisation des services
 * _label_ : Nom de la popup
+* _labelTag_ : Balise utilisé pour les labels. Si hN, les sous-titres seront automatiquement incrémentés (optionnel)
 * _description_ : Description de la popup (optionnel)
 * _close_ : Nom du bouton de fermeture
     
@@ -55,6 +56,7 @@ ___groups___ : Liste des groupes de services
 ___services___ : Liste des services associés aux groupes
 * ___id___ : Identifiant du service (ex: "facebook")
   * _label_ : Nom du service
+  * _description_ : Description du service (optionnel)
   * _url_ : URL vers les termes d'utilisation/politique de confidentialité du service
   * _group_ : Identifiant du groupe à rattacher
       
@@ -105,7 +107,8 @@ ___services___ : Liste des services associés aux groupes
 | &nbsp;&nbsp;&nbsp;&nbsp;modalOpen    | string   | 'is-{prefix}-modal-open'                                     | Classe pour la modale à l'état ouvert                                           |
 | &nbsp;&nbsp;&nbsp;&nbsp;btnAgree     | string   | '{prefix}-agree'                                             | Classe du bouton pour accepter (ex: 'btn btn--primary')                         |
 | &nbsp;&nbsp;&nbsp;&nbsp;btnCustomize | string   | '{prefix}-customize'                                         | Classe du bouton pour personnaliser (ex: 'btn btn--secondary')                  |
-| &nbsp;&nbsp;&nbsp;&nbsp;active       | string   | 'is-active'                                                  | Classe pour l'état actif d'un bouton                                            |
+| &nbsp;&nbsp;&nbsp;&nbsp;active       | string   | 'is-active'                                                  | Classe pour l'état actif d'un service                                           |
+| &nbsp;&nbsp;&nbsp;&nbsp;inactive     | string   | 'is-inactive'                                                | Classe pour l'état inactif d'un service                                         |
 | reload                               | boolean  | false                                                        | Lors du consentement, un rechargement de la page est effectué                   |
 | summary                              | int/bool | 767                                                          | Largeur max en px pour afficher le résumé de la notice. "false" pour désactiver |
 | cookieDuration                       | integer  | 13*30                                                        | Durée d'enregistrement du cookie du consentement                                |

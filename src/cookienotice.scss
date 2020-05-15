@@ -282,37 +282,55 @@
 .cookienotice-group .cookienotice-service:last-of-type {
     border-bottom: 0;
 }
-.cookienotice-service-actions {
-    text-align: right;
-}
 .cookienotice-service-action {
-    padding: 0 14px;
-    height: 32px;
-    color: #fff;
-    background-color: $notice-cookie-modal--color-primary;
-    border: 0;
-    border-radius: 15px;
     cursor: pointer;
-    transition: .3s;
-    white-space: nowrap;
 
-    & + & {
-        margin-left: 10px;
+    &.is-inactive {
+        .cookienotice-service-action-input {
+            grid-template-columns: 0fr 1fr 1fr;
+
+            &:before {
+                background-color: #d9534f;
+            }
+        }
+    }
+    &.is-active {
+        .cookienotice-service-action-input {
+            grid-template-columns: 1fr 1fr 0fr;
+
+            &:before {
+                background-color: #5cb85c;
+            }
+        }
     }
 }
-.cookienotice-service-action--agree {
-    &:hover,
-    &:focus,
-    &.is-active {
-        background-color: #5cb85c;
+.cookienotice-service-action-input { $size: 30px; $padding: 4px;
+    display: grid;
+    grid-template-columns: .5fr 1fr .5fr;
+    padding: $padding;
+    width: $size*2 - $padding*2;
+    height: $size;
+    background: $notice-cookie-modal--color;
+    border-radius: $size/2;
+    box-sizing: border-box;
+    transition: .2s;
+
+    &:before {
+        content: "";
+        grid-column: 2;
+        background: #ccc;
+        border-radius: 50%;
+        transition: background .2s;
     }
 }
-.cookienotice-service-action--disagree {
-    &:hover,
-    &:focus,
-    &.is-active {
-        background-color: #d9534f;
-    }
+.cookienotice-service-action-input--checkbox,
+.cookienotice-service-action-label {
+    position: absolute;
+    z-index: -1;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    visibility: hidden;
 }
 
 .cookienotice-service--all {

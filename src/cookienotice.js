@@ -1,6 +1,14 @@
 (function ($) {
     'use strict';
 
+    /**
+     * CookieNotice
+     *
+     * @param {object} container
+     * @param {object} options
+     *
+     * @return {$.CookieNotice}
+     */
     $.CookieNotice = function (container, options) {
         // Config
         $.extend(true, this.settings = {}, $.CookieNotice.defaults, options);
@@ -37,7 +45,8 @@
             btnAgree: '{prefix}-agree',
             btnDisagree: '{prefix}-disagree',
             btnCustomize: '{prefix}-customize',
-            active: 'is-active'
+            active: 'is-active',
+            inactive: 'is-inactive'
         },
         reload: false,
         summary: 767,
@@ -54,7 +63,7 @@
         /**
          * Préparation des options utilisateur
          *
-         * @return boolean
+         * @return {boolean}
          */
         prepareOptions: function () {
             // Cookies activés ?
@@ -194,7 +203,7 @@
         /**
          * Show/hide notice
          *
-         * @param action "show" ou "hide"
+         * @param {string} action "show" ou "hide"
          */
         notice: function (action) {
             this.elements.body[(action === 'hide' ? 'remove' : 'add') + 'Class'](this.settings.classes.noticeOpen);
@@ -371,45 +380,56 @@
         /**
          * Wrapper des actions par service
          *
-         * @param service
+         * @param {string} service
          */
         wrapServiceActions: function (service) {
             var self = this;
             var state = self.getState(service);
             var actions = $('<div>', {
-                'class': this.settings.classes.prefix + '-service-actions'
+                'class': self.settings.classes.prefix + '-service-actions'
             });
 
-            $.each(['agree', 'disagree'], function (i, action) {
-                var isActive;
-                var count = 0;
-
-                if (self.config.services.all[action] !== undefined && self.config.services.all[action] !== '') {
-                    isActive = (action === 'agree' && state === true || action === 'disagree' && state === false) ? ' ' + self.settings.classes.active : '';
-
-                    if (service === 'all') {
-                        $.each($.CookieNotice.services, function (allService, allState) {
-                            if (action === 'agree' && allState === true) {
-                                count++;
-                            } else if (action === 'disagree' && allState === false) {
-                                count++;
-                            }
-                        });
-
-                        if (count === Object.keys($.CookieNotice.services).length) {
-                            isActive = ' ' + self.settings.classes.active;
+            if (self.config.services.all['agree'] !== undefined && self.config.services.all['agree'] !== '' && self.config.services.all['disagree'] !== undefined && self.config.services.all['disagree'] !== '') {
+                if (service === 'all') {
+                    var count = 0;
+                    var none = false;
+                    $.each($.CookieNotice.services, function (allService, allState) {
+                        if (allState === true) {
+                            count++;
                         }
-                    }
+                        if (allState === 'undefined') {
+                            none = true;
+                        }
+                    });
 
-                    $('<button>', {
-                        'class': self.settings.classes.prefix + '-service-action ' + self.settings.classes.prefix + '-service-action--' + action + isActive,
-                        'data-action': action,
-                        html: $('<span>', {
-                            html: self.config.services.all[action]
-                        })
-                    }).appendTo(actions);
+                    var checkedState = count === Object.keys($.CookieNotice.services).length;
+                    state = none ? 'undefined' : (count > 0 && !checkedState ? 'undefined' : checkedState);
                 }
-            });
+
+                // Switch
+                var serviceActionWrapper = $('<span>', {
+                    'class': self.settings.classes.prefix + '-service-action ' + (state === 'undefined' ? '' : (state ? self.settings.classes.active : self.settings.classes.inactive))
+                });
+                $('<span>', {
+                    'class': self.settings.classes.prefix + '-service-action-input',
+                    html: $('<input>', {
+                        type: 'checkbox',
+                        'class': self.settings.classes.prefix + '-service-action-input--checkbox',
+                        id: self.settings.classes.prefix + '-service-action--' + service,
+                        name: service,
+                        value: state,
+                        checked: state === true
+                    })
+                }).appendTo(serviceActionWrapper);
+                $('<label>', {
+                    for: self.settings.classes.prefix + '-service-action--' + service,
+                    'class': self.settings.classes.prefix + '-service-action-label',
+                    html: state === 'undefined' ? self.config.services.all.customize : self.config.services.all[!state ? 'disagree' : 'agree'],
+                    'aria-hidden': true
+                }).appendTo(serviceActionWrapper);
+
+                serviceActionWrapper.appendTo(actions);
+            }
 
             return actions;
         },
@@ -417,7 +437,7 @@
         /**
          * Show/hide modal
          *
-         * @param action "show" ou "hide"
+         * @param {string} action "show" ou "hide"
          */
         modal: function (action) {
             var self = this;
@@ -531,30 +551,41 @@
                 $(document).on('keydown.cookienotice.modalEscape', closeModal);
 
                 // States
-                self.elements.serviceAction = self.elements.servicesWrapper.find('button.' + self.settings.classes.prefix + '-service-action');
+                self.elements.serviceAction = self.elements.servicesWrapper.find('.' + self.settings.classes.prefix + '-service-action');
                 self.elements.serviceAction.on('click.cookienotice.serviceAction', function (event) {
                     var btn = $(event.currentTarget);
-                    var action = btn.attr('data-action');
+                    var input = btn.find('input');
+                    var state = input.prop('checked');
+                    var label = btn.find('label');
                     var serviceElement = btn.closest('.' + self.settings.classes.prefix + '-service');
                     var service = serviceElement.attr('data-service');
 
-                    if (action !== undefined && service !== undefined) {
+                    if (service !== undefined) {
                         // Btn state
-                        btn.siblings().removeClass(self.settings.classes.active);
-                        btn.addClass(self.settings.classes.active);
+                        btn[(state ? 'remove' : 'add') + 'Class'](self.settings.classes.active);
+                        btn[(state ? 'add' : 'remove') + 'Class'](self.settings.classes.inactive);
+                        input.prop('checked', !state);
+                        label.html(self.config.services.all[state ? 'disagree' : 'agree']);
 
+                        // All
                         if (service === 'all') {
-                            self.elements.serviceAction.filter('[data-action="' + action + '"]').each(function (i, item) {
+                            self.elements.serviceAction.each(function (i, item) {
                                 item = $(item);
-                                item.siblings().removeClass(self.settings.classes.active);
-                                item.addClass(self.settings.classes.active);
+                                item[(state ? 'remove' : 'add') + 'Class'](self.settings.classes.active);
+                                item[(state ? 'add' : 'remove') + 'Class'](self.settings.classes.inactive);
+                                item.find('input').prop('checked', !state);
+                                item.find('label').html(self.config.services.all[state ? 'disagree' : 'agree']);
                             });
                         } else {
-                            self.elements.serviceAllWrapper.find('button').removeClass(self.settings.classes.active);
+                            var allItem = self.elements.serviceAllWrapper.find('.' + self.settings.classes.prefix + '-service-action');
+                            allItem.removeClass(self.settings.classes.active);
+                            allItem.removeClass(self.settings.classes.inactive);
+                            allItem.find('input').prop('checked', false);
+                            allItem.find('label').html(self.config.services.all.customize);
                         }
 
                         // Service state
-                        self.setState(service, (action === 'agree'));
+                        self.setState(service, !state);
                     }
                 });
             }
@@ -579,7 +610,7 @@
         /**
          * Accepte un service
          *
-         * @param service
+         * @param {string=undefined} service
          */
         agree: function (service) {
             service = service || 'all';
@@ -590,7 +621,7 @@
         /**
          * Refuse un service
          *
-         * @param service
+         * @param {string=undefined} service
          */
         disagree: function (service) {
             service = service || 'all';
@@ -601,8 +632,8 @@
         /**
          * Définition de l'état du service
          *
-         * @param service
-         * @param state
+         * @param {string} service
+         * @param {boolean} state
          */
         setState: function (service, state) {
             // Variables globales
@@ -637,7 +668,7 @@
         /**
          * Chargement des états des services depuis le cookie
          *
-         * @return boolean|object False si le cookie n'existe pas ou object avec l'état de chaque service s'il existe
+         * @return {boolean|object} False si le cookie n'existe pas ou object avec l'état de chaque service s'il existe
          */
         loadStates: function () {
             var states = this.getCookie(this.cookieName);
@@ -658,8 +689,8 @@
         /**
          * Récupération de l'état du service. Si le choix n'a pas été fait, l'état retourné est "undefined"
          *
-         * @param service
-         * @return boolean|string
+         * @param {string} service
+         * @return {boolean|string}
          */
         getState: function (service) {
             if ($.CookieNotice.services[service] !== undefined) {
@@ -672,20 +703,20 @@
         /**
          * Détermine si un service est autorisé
          *
-         * @param service
-         * @return boolean
+         * @param {string} service
+         * @return {boolean}
          */
         isAllowed: function (service) {
-            return (this.getState(service) === true);
+            return this.getState(service) === true;
         },
 
         /**
          * Détermine si il y a eu un consentement (accepté ou non)
          *
-         * @return boolean
+         * @return {boolean}
          */
         hasConsent: function () {
-            return (!!this.getCookie(this.cookieName));
+            return !!this.getCookie(this.cookieName);
         },
 
         /**

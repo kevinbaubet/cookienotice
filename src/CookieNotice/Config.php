@@ -74,6 +74,8 @@ abstract class Config {
                 'all' => [
                     // Nom du service
                     'label' => 'Préférences pour tous les services',
+                    // Label bu bouton "non défini"
+                    'customize' => 'Je choisis',
                     // Label du bouton "autoriser"
                     'agree' => 'J\'accepte',
                     // Label du bouton "interdire"
@@ -83,7 +85,6 @@ abstract class Config {
                 // ANALYTICS
                 'analytics' => [
                     'label' => 'Google Analytics',
-                    'description' => '',
                     'url' => 'https://support.google.com/analytics/answer/6004245',
                     'group' => 'analytics'
                 ],
