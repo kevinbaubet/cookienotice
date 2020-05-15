@@ -7,16 +7,15 @@ namespace CookieNotice;
  *
  * @package CookieNotice
  */
-abstract class Config
-{
+abstract class Config {
+
     /**
      * Configuration de CookieNotice
      *
      * Pour ne pas activer la personnalisation des serices, supprimez la configuration 'modal'
      * @return array
      */
-    public static function set()
-    {
+    public static function set() {
         return [
             // Configuration du bandeau notice
             'notice' => [
@@ -82,6 +81,7 @@ abstract class Config
                 // ANALYTICS
                 'analytics' => [
                     'label' => 'Google Analytics',
+                    'description' => '',
                     'url' => 'https://support.google.com/analytics/answer/6004245',
                     'group' => 'analytics'
                 ],
@@ -145,8 +145,8 @@ abstract class Config
      *
      * @return string
      */
-    public static function get()
-    {
+    public static function get() {
         return htmlspecialchars(json_encode(self::set()));
     }
+
 }

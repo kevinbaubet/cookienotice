@@ -303,7 +303,11 @@
                                     'class': self.settings.classes.prefix + '-service ' + self.settings.classes.prefix + '-service--' + service,
                                     'data-service': service
                                 });
+                                var serviceLabelWrapper = $('<div>', {
+                                    'class': self.settings.classes.prefix + '-service-label-wrapper'
+                                });
 
+                                // Label
                                 var serviceLabel;
                                 var serviceLabelAttributes = {
                                     'class': self.settings.classes.prefix + '-service-label',
@@ -315,8 +319,18 @@
                                 } else {
                                     serviceLabel = $('<span>', serviceLabelAttributes);
                                 }
-                                serviceLabel.appendTo(serviceWrapper);
+                                serviceLabel.appendTo(serviceLabelWrapper);
 
+                                // Description
+                                if (self.config.services[service].description !== undefined && self.config.services[service].description !== '') {
+                                    var serviceDescription = $('<p>', {
+                                        'class': self.settings.classes.prefix + '-service-description',
+                                        html: self.config.services[service].description
+                                    });
+                                    serviceDescription.appendTo(serviceLabelWrapper);
+                                }
+
+                                serviceLabelWrapper.appendTo(serviceWrapper);
                                 self.wrapServiceActions(service).appendTo(serviceWrapper);
                                 serviceWrapper.appendTo(servicesList);
                             });

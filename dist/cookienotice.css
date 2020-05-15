@@ -309,6 +309,12 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.cookienotice-service .cookienotice-service-description {
+  margin: 6px 0 0;
+  color: #888;
+  font-size: .8em;
+}
+
 .cookienotice-group .cookienotice-service:last-of-type {
   border-bottom: 0;
 }
