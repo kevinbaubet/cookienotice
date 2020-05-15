@@ -34,6 +34,8 @@ abstract class Config {
             'modal' => [
                 // Nom de la popup
                 'label' => 'Gestion de vos préférences sur les cookies',
+                // Balise utilisé pour les labels. Si hN, les sous-titres seront automatiquement incrémentés (optionnel)
+                'labelTag' => 'h2',
                 // Description de la popup (optionnel)
                 'description' => '<p>En autorisant ces services tiers, vous acceptez le dépôt et la lecture de cookies et l\'utilisation de technologies de suivi nécessaires à leur bon fonctionnement.</p>',
                 // Nom du bouton de fermeture

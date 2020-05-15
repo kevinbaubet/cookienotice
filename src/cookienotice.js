@@ -218,7 +218,7 @@
                 });
 
                 if (self.config.modal.label !== undefined && self.config.modal.label !== '') {
-                    $('<p>', {
+                    $('<' + (self.config.modal.labelTag || 'p') + '>', {
                         'class': self.settings.classes.prefix + '-modal-label',
                         html: self.config.modal.label
                     }).appendTo(self.elements.modalHeader);
@@ -243,7 +243,6 @@
                 // Services
                 if (self.config.services !== undefined) {
                     var servicesByGroups = {};
-
                     $.each(this.config.services, function (service, options) {
                         if (service !== 'all') {
                             if (servicesByGroups[options.group] === undefined) {
@@ -257,6 +256,13 @@
                     self.elements.servicesWrapper = $('<div>', {
                         'class': self.settings.classes.prefix + '-services'
                     });
+                    
+                    var serviceLabelTag = self.config.modal.labelTag || 'p';
+                    if (serviceLabelTag.indexOf('h') !== -1) {
+                        var serviceLabelTagLevel = parseInt(serviceLabelTag.substring(1));
+                        serviceLabelTagLevel++;
+                        serviceLabelTag = 'h' + serviceLabelTagLevel;
+                    }
 
                     // All
                     if (self.config.services.all !== undefined) {
@@ -265,7 +271,7 @@
                             'data-service': 'all'
                         });
 
-                        $('<p>', {
+                        $('<' + serviceLabelTag + '>', {
                             'class': self.settings.classes.prefix + '-service-all-label',
                             html   : self.config.services.all.label
                         }).appendTo(self.elements.serviceAllWrapper);
@@ -283,7 +289,7 @@
                         }).appendTo(groupsList);
 
                         if (self.config.groups[group].label !== undefined && self.config.groups[group].label !== '') {
-                            $('<p>', {
+                            $('<' + serviceLabelTag + '>', {
                                 'class': self.settings.classes.prefix + '-group--label',
                                 html: self.config.groups[group].label
                             }).appendTo(groupWrapper);
