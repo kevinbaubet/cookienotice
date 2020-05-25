@@ -51,6 +51,7 @@
         reload: false,
         summary: 767,
         cookieDuration: 13*30, // 13 mois, durée max pour stocker le consentement
+        tabindexStart: 0,
         afterWrapNotice: undefined,
         afterWrapModal: undefined,
         afterEventsHandler: undefined,
@@ -218,7 +219,9 @@
             if (self.config.modal !== undefined) {
                 // Wrapper
                 self.elements.modalWrapper = $('<div>', {
-                    'class': self.settings.classes.modal
+                    'class': self.settings.classes.modal,
+                    role: 'dialog',
+                    tabindex: '-1'
                 });
 
                 // Header
@@ -231,6 +234,8 @@
                         'class': self.settings.classes.prefix + '-modal-label',
                         html: self.config.modal.label
                     }).appendTo(self.elements.modalHeader);
+
+                    self.elements.modalWrapper.attr('aria-label', self.config.modal.label);
                 }
                 if (self.config.modal.description !== undefined && self.config.modal.description !== '') {
                     $('<div>', {
@@ -291,7 +296,8 @@
 
                     // Groupe => Services
                     var groupsList = $('<ul>');
-
+                    var groupIndex = 0;
+                    var groupLength = Object.keys(servicesByGroups).length;
                     $.each(servicesByGroups, function (group, services) {
                         var groupWrapper = $('<li>', {
                             'class': self.settings.classes.prefix + '-group ' + self.settings.classes.prefix + '-group--' + group
@@ -326,7 +332,8 @@
                                 var serviceLabel;
                                 var serviceLabelAttributes = {
                                     'class': self.settings.classes.prefix + '-service-label',
-                                    html: self.config.services[service].label
+                                    html: self.config.services[service].label,
+                                    tabindex: -1
                                 };
                                 if (self.config.services[service].url !== undefined && self.config.services[service].url !== '') {
                                     serviceLabelAttributes['href'] = self.config.services[service].url;
@@ -345,6 +352,11 @@
                                     serviceDescription.appendTo(serviceLabelWrapper);
                                 }
 
+                                // Last service
+                                if (groupIndex === groupLength-1 && i === services.length-1) {
+                                    serviceWrapper.addClass('is-last');
+                                }
+
                                 serviceLabelWrapper.appendTo(serviceWrapper);
                                 self.wrapServiceActions(service).appendTo(serviceWrapper);
                                 serviceWrapper.appendTo(servicesList);
@@ -352,6 +364,8 @@
 
                             servicesList.appendTo(groupWrapper);
                         }
+
+                        groupIndex++;
                     });
 
                     groupsList.appendTo(self.elements.servicesWrapper);
@@ -412,6 +426,7 @@
                 });
                 $('<span>', {
                     'class': self.settings.classes.prefix + '-service-action-input',
+                    tabindex: self.settings.tabindexStart,
                     html: $('<input>', {
                         type: 'checkbox',
                         'class': self.settings.classes.prefix + '-service-action-input--checkbox',
@@ -448,6 +463,12 @@
                 setTimeout(function () {
                     self.elements.modalWrapper.focus();
                 }, 100);
+            }
+
+            if (action === 'hide' && self.elements.openBtn !== undefined && self.elements.openBtn.length) {
+                setTimeout(function () {
+                    self.elements.openBtn = undefined;
+                }, 200);
             }
         },
 
@@ -513,12 +534,15 @@
 
             // Bouton "customize"
             if (self.elements.btnCustomize !== undefined && self.elements.btnCustomize.length) {
-                self.elements.btnCustomize.on('click.cookienotice.btnCustomize', function (event) {
-                    event.preventDefault();
-                    self.modal('show');
+                self.elements.btnCustomize.on('click.cookienotice.btnCustomize keyup.cookienotice.btnCustomize', function (event) {
+                    if (event.type === 'click' || event.type === 'keyup' && (event.key === 'Enter' || event.key === ' ')) {
+                        event.preventDefault();
+                        self.modal('show');
+                        self.elements.openBtn = $(event.currentTarget);
 
-                    if (!self.getCookie(self.cookieName)) {
-                        self.notice('hide');
+                        if (!self.getCookie(self.cookieName)) {
+                            self.notice('hide');
+                        }
                     }
                 });
             }
@@ -526,7 +550,15 @@
             // Modal
             if (self.config.modal !== undefined) {
                 closeModal = function (event) {
-                    if (event.type === 'click' || (event.type === 'keydown' && event.keyCode === 27)) {
+                    if (event.type === 'click' || (event.type === 'keydown' && event.key === 'Escape')) {
+                        // Focus
+                        if (!self.settings.reload && self.elements.openBtn !== undefined && self.elements.openBtn.length) {
+                            event.preventDefault();
+                            setTimeout(function () {
+                                self.elements.openBtn.focus();
+                            }, 100);
+                        }
+
                         self.modal('hide');
 
                         if (!self.getCookie(self.cookieName)) {
@@ -539,7 +571,15 @@
 
                 // Close
                 if (self.elements.modalClose.length) {
-                    self.elements.modalClose.on('click.cookienotice.modalClose', closeModal);
+                    self.elements.modalClose.on({
+                        'click.cookienotice.modalClose': closeModal,
+                        'keydown.cookienotice.modalClose': function (event) {
+                            if (event.key === 'Tab' && event.shiftKey) {
+                                event.preventDefault();
+                                self.elements.servicesWrapper.find('.is-last .' + self.settings.classes.prefix + '-service-action-input').focus();
+                            }
+                        }
+                    });
                 }
 
                 // Overlay
@@ -552,40 +592,52 @@
 
                 // States
                 self.elements.serviceAction = self.elements.servicesWrapper.find('.' + self.settings.classes.prefix + '-service-action');
-                self.elements.serviceAction.on('click.cookienotice.serviceAction', function (event) {
+                self.elements.serviceAction.on('click.cookienotice.serviceAction keydown.cookienotice.serviceAction', function (event) {
                     var btn = $(event.currentTarget);
-                    var input = btn.find('input');
-                    var state = input.prop('checked');
-                    var label = btn.find('label');
                     var serviceElement = btn.closest('.' + self.settings.classes.prefix + '-service');
-                    var service = serviceElement.attr('data-service');
+                    if (event.key === ' ') {
+                        event.preventDefault();
+                    }
 
-                    if (service !== undefined) {
-                        // Btn state
-                        btn[(state ? 'remove' : 'add') + 'Class'](self.settings.classes.active);
-                        btn[(state ? 'add' : 'remove') + 'Class'](self.settings.classes.inactive);
-                        input.prop('checked', !state);
-                        label.html(self.config.services.all[state ? 'disagree' : 'agree']);
+                    if (event.type === 'click' || event.type === 'keydown' && (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
+                        var input = btn.find('input');
+                        var state = input.prop('checked');
+                        var label = btn.find('label');
+                        var service = serviceElement.attr('data-service');
 
-                        // All
-                        if (service === 'all') {
-                            self.elements.serviceAction.each(function (i, item) {
-                                item = $(item);
-                                item[(state ? 'remove' : 'add') + 'Class'](self.settings.classes.active);
-                                item[(state ? 'add' : 'remove') + 'Class'](self.settings.classes.inactive);
-                                item.find('input').prop('checked', !state);
-                                item.find('label').html(self.config.services.all[state ? 'disagree' : 'agree']);
-                            });
-                        } else {
-                            var allItem = self.elements.serviceAllWrapper.find('.' + self.settings.classes.prefix + '-service-action');
-                            allItem.removeClass(self.settings.classes.active);
-                            allItem.removeClass(self.settings.classes.inactive);
-                            allItem.find('input').prop('checked', false);
-                            allItem.find('label').html(self.config.services.all.customize);
+                        if (service !== undefined) {
+                            // Btn state
+                            btn[(state ? 'remove' : 'add') + 'Class'](self.settings.classes.active);
+                            btn[(state ? 'add' : 'remove') + 'Class'](self.settings.classes.inactive);
+                            input.prop('checked', !state);
+                            label.html(self.config.services.all[state ? 'disagree' : 'agree']);
+
+                            // All
+                            if (service === 'all') {
+                                self.elements.serviceAction.each(function (i, item) {
+                                    item = $(item);
+                                    item[(state ? 'remove' : 'add') + 'Class'](self.settings.classes.active);
+                                    item[(state ? 'add' : 'remove') + 'Class'](self.settings.classes.inactive);
+                                    item.find('input').prop('checked', !state);
+                                    item.find('label').html(self.config.services.all[state ? 'disagree' : 'agree']);
+                                });
+                            } else {
+                                var allItem = self.elements.serviceAllWrapper.find('.' + self.settings.classes.prefix + '-service-action');
+                                allItem.removeClass(self.settings.classes.active);
+                                allItem.removeClass(self.settings.classes.inactive);
+                                allItem.find('input').prop('checked', false);
+                                allItem.find('label').html(self.config.services.all.customize);
+                            }
+
+                            // Service state
+                            self.setState(service, !state);
                         }
+                    }
 
-                        // Service state
-                        self.setState(service, !state);
+                    // Repeat tabindex
+                    if (event.type === 'keydown' && event.key === 'Tab' && !event.shiftKey && serviceElement.hasClass('is-last')) {
+                        event.preventDefault();
+                        self.elements.modalClose.focus();
                     }
                 });
             }

@@ -68,6 +68,9 @@ pre {
 .modal--cookie a {
     text-decoration: none;
 }
+.cookienotice-customize:focus {
+    outline: 1px dotted #fff;
+}
 
 .cookienotice-btn {
     padding: 10px 15px;
