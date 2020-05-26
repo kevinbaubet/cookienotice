@@ -112,6 +112,7 @@ ___services___ : Liste des services associés aux groupes
 | reload                               | boolean  | false                                                        | Lors du consentement, un rechargement de la page est effectué                   |
 | summary                              | int/bool | 767                                                          | Largeur max en px pour afficher le résumé de la notice. "false" pour désactiver |
 | cookieDuration                       | integer  | 13*30                                                        | Durée d'enregistrement du cookie du consentement                                |
+| tabindexStart                        | integer  | 0                                                            | Valeur de l'attribut tabindex au chargement de CookieNotice                     |
 | afterWrapNotice                      | function | undefined                                                    | Callback après l'ajout de la notice dans la page                                |
 | afterWrapModal                       | function | undefined                                                    | Callback après l'ajout de la modale dans la page                                |
 | afterEventsHandler                   | function | undefined                                                    | Callback après la déclaration des événements                                    |

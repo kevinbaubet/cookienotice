@@ -323,6 +323,10 @@
   border-bottom: 0;
 }
 
+a.cookienotice-service-label:focus {
+  outline: 1px dotted #000;
+}
+
 .cookienotice-service-action {
   cursor: pointer;
 }

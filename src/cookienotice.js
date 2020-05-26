@@ -332,11 +332,11 @@
                                 var serviceLabel;
                                 var serviceLabelAttributes = {
                                     'class': self.settings.classes.prefix + '-service-label',
-                                    html: self.config.services[service].label,
-                                    tabindex: -1
+                                    html: self.config.services[service].label
                                 };
                                 if (self.config.services[service].url !== undefined && self.config.services[service].url !== '') {
                                     serviceLabelAttributes['href'] = self.config.services[service].url;
+                                    serviceLabelAttributes['tabindex'] = self.settings.tabindexStart;
                                     serviceLabel = $('<a>', serviceLabelAttributes);
                                 } else {
                                     serviceLabel = $('<span>', serviceLabelAttributes);
