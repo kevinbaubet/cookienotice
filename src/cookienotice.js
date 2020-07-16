@@ -18,7 +18,6 @@
             body: $('body'),
             container: container
         };
-        this.elements.siteLinks = this.settings.siteLinks(this.elements.body);
 
         // Variables
         this.config = this.elements.container.attr('data-config');
@@ -33,9 +32,6 @@
     };
 
     $.CookieNotice.defaults = {
-        siteLinks: function (body) {
-            return body.find('a[target!="_blank"]');
-        },
         classes: {
             prefix: 'cookienotice',
             notice: 'notice notice--cookie',
@@ -374,11 +370,6 @@
 
                 self.elements.modalWrapper.appendTo(self.elements.container);
 
-                // Overlay
-                self.elements.modalOverlay = $('<div>', {
-                    'class': self.settings.classes.prefix + '-modal-overlay'
-                }).appendTo(self.elements.container);
-
                 // User callback
                 if (self.settings.afterWrapModal !== undefined) {
                     self.settings.afterWrapModal.call({
@@ -387,6 +378,11 @@
                     });
                 }
             }
+
+            // Overlay
+            self.elements.modalOverlay = $('<div>', {
+                'class': self.settings.classes.prefix + '-modal-overlay'
+            }).appendTo(self.elements.container);
 
             return self;
         },
@@ -641,12 +637,6 @@
                     }
                 });
             }
-
-            // Lien dans le site
-            self.elements.siteLinks.not(self.elements.container.find('a')).not('.' + self.settings.classes.btnCustomize).one('click.cookienotice.siteLinks', function () {
-                self.agree();
-                self.notice('hide');
-            });
 
             // User callback
             if (self.settings.afterEventsHandler !== undefined) {

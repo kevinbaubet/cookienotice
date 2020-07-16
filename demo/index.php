@@ -64,25 +64,15 @@ if (\CookieNotice\Service::hasConsent()) {
                 <b>1ère étape :</b> une notice s'affiche pour informer l'utilisation des cookies pour une liste de services.<br />
                 <br />
                 <b>2ème étape :</b> un choix est fait si l'utilisateur :<br />
+                - clique sur le bouton de la notice "je choisis", pour choisir précisément les services déposant des cookies<br />
                 - clique sur le bouton de la notice "j'accepte", ce qui vaut pour acceptation de tous les cookies<br />
                 - clique sur le bouton de la notice "je refuse", ce qui interdit l'installation de tous les cookies<br />
-                - clique sur n'importe quel lien interne de la page et poursuit la navigation, ce qui vaut pour acceptation de tous les cookies<br />
-                - personnalise les services un par un
-                <br />
                 <br />
                 <b>3ème étape :</b> dépôt d'un cookie pour enregistrer le consentement de l'utilisateur :<br />
                 - pendant une durée maximum de 13 mois<br />
                 - possiblité de changer d'avis en retournant sur la personnalisation des services<br />
                 <br />
             </p>
-
-            <h2>Exemple comportant un lien</h2>
-            <p>
-                Lorem ipsum dolor sit amet, <a href="">cliquer sur ce lien permet d'accepter les cookies</a>. Nisi, et reiciendis ea corrupti accusamus? Maxime nostrum deserunt assumenda consequatur magnam ipsam beatae ad facilis tenetur, ratione voluptatum error dicta iusto?
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, et reiciendis ea corrupti accusamus?
-                <br />
-            </p>
-            <br />
 
             <h2>Changer d'avis</h2>
             <p>

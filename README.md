@@ -98,7 +98,6 @@ ___services___ : Liste des services associés aux groupes
 
 | Option                               | Type     | Valeur par défaut                                            | Description                                                                     |
 |--------------------------------------|----------|--------------------------------------------------------------|---------------------------------------------------------------------------------|
-| siteLinks                            | function | function (body) { return body.find('a[target!="_blank"]'); } | Fonction retournant tous les liens internes du site                             |
 | classes                              | object   | Voir ci-dessous                                              | Objet pour les options ci-dessous                                               |
 | &nbsp;&nbsp;&nbsp;&nbsp;prefix       | string   | 'cookienotice'                                               | Classe de préfix                                                                |
 | &nbsp;&nbsp;&nbsp;&nbsp;notice       | string   | 'notice notice--cookie'                                      | Classe pour la notice                                                           |
