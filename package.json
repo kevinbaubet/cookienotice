@@ -1,6 +1,6 @@
 {
   "name": "@kevinbaubet/cookienotice",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "main": "./dist/cookienotice.min.js",
   "repository": {
     "type": "git",

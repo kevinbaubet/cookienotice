@@ -149,12 +149,6 @@
         visibility: visible;
         pointer-events: auto;
     }
-
-    /* Responsive
-     ========================================================================== */
-    @media screen and (max-width: $breakpoint--smartphone) {
-        display: none;
-    }
 }
 
 /* Close btn

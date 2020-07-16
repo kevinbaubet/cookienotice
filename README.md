@@ -9,9 +9,9 @@
 **1ère étape** : une notice s'affiche pour informer l'utilisation des cookies pour une liste de services.
 
 **2ème étape** : un choix est fait si l'utilisateur :
+* clique sur le bouton de la notice "je choisis", pour choisir précisément les services déposant des cookies
 * clique sur le bouton de la notice "j'accepte", ce qui vaut pour acceptation de tous les cookies
-* clique sur n'importe quel lien interne de la page et poursuit la navigation, ce qui vaut pour acceptation de tous les cookies
-* personnalise les services un par un
+* clique sur le bouton de la notice "je refuse", ce qui interdit l'installation de tous les cookies
 
 **3ème étape** : dépôt d'un cookie pour enregistrer le consentement de l'utilisateur :
 * pendant une durée maximum de 13 mois
@@ -26,6 +26,8 @@
     <div id="notice-cookie" data-config="<?php echo \CookieNotice\Config::get(); ?>"></div>
     
     $('#notice-cookie').cookieNotice([options]);
+    
+    <a href="#" class="cookienotice-customize">Gestion des cookies</a>
 
 
 ## Côté PHP
@@ -105,6 +107,7 @@ ___services___ : Liste des services associés aux groupes
 | &nbsp;&nbsp;&nbsp;&nbsp;modal        | string   | 'modal modal--cookie'                                        | Classe pour la modale                                                           |
 | &nbsp;&nbsp;&nbsp;&nbsp;modalOpen    | string   | 'is-{prefix}-modal-open'                                     | Classe pour la modale à l'état ouvert                                           |
 | &nbsp;&nbsp;&nbsp;&nbsp;btnAgree     | string   | '{prefix}-agree'                                             | Classe du bouton pour accepter (ex: 'btn btn--primary')                         |
+| &nbsp;&nbsp;&nbsp;&nbsp;btnDisagree  | string   | '{prefix}-disagree'                                          | Classe du bouton pour refuser (ex: 'btn btn--secondary')                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;btnCustomize | string   | '{prefix}-customize'                                         | Classe du bouton pour personnaliser (ex: 'btn btn--secondary')                  |
 | &nbsp;&nbsp;&nbsp;&nbsp;active       | string   | 'is-active'                                                  | Classe pour l'état actif d'un service                                           |
 | &nbsp;&nbsp;&nbsp;&nbsp;inactive     | string   | 'is-inactive'                                                | Classe pour l'état inactif d'un service                                         |

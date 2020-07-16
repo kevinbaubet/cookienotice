@@ -163,8 +163,6 @@
   overflow: auto;
   -webkit-transition: opacity .3s;
   transition: opacity .3s;
-  /* Responsive
-     ========================================================================== */
 }
 
 .is-cookienotice-notice-open .cookienotice-modal-overlay,
@@ -173,12 +171,6 @@
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-}
-
-@media screen and (max-width: 767px) {
-  .cookienotice-modal-overlay {
-    display: none;
-  }
 }
 
 /* Close btn
