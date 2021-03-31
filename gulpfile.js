@@ -1,7 +1,10 @@
 const packagejson = require('./package.json');
 const plugins = require('gulp-load-plugins')({
     pattern: ['*'],
-    scope: ['devDependencies']
+    scope: ['devDependencies'],
+    rename: {
+        'gulp-postcss': 'gulpPostcss'
+    }
 });
 
 // Compilation SASS
@@ -9,7 +12,7 @@ function sass(pumpCallback) {
     return plugins.pump([
         plugins.gulp.src('./src/**/*.scss'),
         plugins.sass(packagejson.sass),
-        plugins.postcss([
+        plugins.gulpPostcss([
             plugins.autoprefixer(packagejson.autoprefixer),
             plugins.postcssPxtorem(packagejson.pxtorem)
         ]),

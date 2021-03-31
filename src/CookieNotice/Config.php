@@ -10,134 +10,147 @@ namespace CookieNotice;
 abstract class Config {
 
     /**
-     * Configuration de CookieNotice
+     * CookieNotice configuration
      *
-     * Pour ne pas activer la personnalisation des serices, supprimez la configuration 'modal'
      * @return array
      */
-    public static function set() {
+    public static function set(): array {
         return [
-            // Configuration du bandeau notice
+            /**
+             * Notice configuration
+             *
+             * - description Notice contents
+             * - summary     Summary of notice contents showed in mobile
+             * - customize   Button label to customize services
+             * - agree       Button label to accept all services
+             * - disagree    Button label to deny all services
+             */
             'notice' => [
-                // Contenu de la notice
-                'description' => 'En poursuivant votre navigation sur ce site, vous acceptez l\'utilisation de cookies ou technologies similaires de traçage permettant de vous offrir la meilleure expérience de navigation : conserver vos préférences, établir des statistiques de fréquentation, vous proposer des offres et des contenus adaptés à vos centres d\'intérêt y compris de partenaires tiers. Pour en savoir plus et paramétrer les cookies, <a href="/politique-de-confidentialite">consultez notre politique de confidentialité</a>.',
-                // Résumé de la notice affichée en version mobile
-                'summary' => 'En poursuivant votre navigation sur ce site, vous acceptez l\'utilisation de cookies... (voir plus)',
-                // Label du bouton pour personnaliser les services
-                'customize' => 'Je choisis',
-                // Label du bouton pour accepter tous les services
-                'agree' => 'Ok, j\'accepte',
-                // Label du bouton pour refuster tous les services
-                'disagree' => 'Je refuse'
+                'description' => '
+                    <h2 class="cookienotice-modal-label">Nous respectons votre vie privée</h2>
+                    <p>Nous utilisons des données non sensibles comme des cookies pour assurer le fonctionnement optimal du site et réaliser des statistiques d’audience. Cliquez sur le bouton "{agree}" pour donner votre consentement à ces opérations et profiter d’une expérience personnalisée. Cliquez sur "{disagree}" pour les refuser ou modifiez vos préférences en cliquant sur "{customize}".</p>
+                ',
+                'summary' => '
+                    <h2 class="cookienotice-modal-label">Nous respectons votre vie privée</h2>
+                    <p>Nous utilisons des données non sensibles comme des cookies pour assurer le fonctionnement optimal du site et réaliser des statistiques d’audience... (voir plus)</p>
+                ',
+                'agree' => 'Tout accepter',
+                'disagree' => 'Continuer sans accepter',
+                'customize' => 'Paramétrer les cookies'
             ],
-            // Configuration de la popup pour personnaliser les services. Commentez cette partie pour ne pas autoriser la personnalisation des services
+
+            /**
+             * (optional) Modal configuration to customize services
+             *
+             * - label       Modal title
+             * - labelTag    (optional) Tag used for modal title. If hN, the subtitles will be increase automatically
+             * - description (optional) Modal description
+             * - close       Button label to close modal
+             */
+            //
             'modal' => [
-                // Nom de la popup
-                'label' => 'Gestion de vos préférences sur les cookies',
-                // Balise utilisé pour les labels. Si hN, les sous-titres seront automatiquement incrémentés (optionnel)
+                'label' => 'Centre de préférences de la confidentialité',
                 'labelTag' => 'h2',
-                // Description de la popup (optionnel)
-                'description' => '<p>En autorisant ces services tiers, vous acceptez le dépôt et la lecture de cookies et l\'utilisation de technologies de suivi nécessaires à leur bon fonctionnement.</p>',
-                // Nom du bouton de fermeture
+                'description' => '<p>Lorsque vous consultez un site Web, des données peuvent être stockées dans votre navigateur sous la forme de cookies. Ces informations peuvent porter sur vous, sur vos préférences ou sur votre appareil et sont utilisées pour s\'assurer que le site Web fonctionne correctement. Les informations ne permettent pas de vous identifier directement, mais de vous faire bénéficier d\'une expérience personnalisée. Parce que nous respectons votre droit à la vie privée, nous vous donnons la possibilité gérer les cookies.</p>',
                 'close' => 'Fermer'
             ],
-            // Liste des groupes de services
+
+            /**
+             * Groups list of services
+             *
+             * By default: none
+             * Add a group:
+             *    group_id
+             *      - label       Group title
+             *      - description (optional) Group description
+             */
             'groups' => [
-                'advertising' => [
-                    'label' => 'Régie publicitaire'
-                ],
-                'analytics' => [
-                    'label' => 'Mesure d\'audience',
-                    'description' => 'Les services de mesure d\'audience permettent de générer des statistiques de fréquentation utiles à l\'amélioration du site.'
-                ],
-                'api' => [
-                    'label' => 'APIs'
-                ],
-                'comment' => [
-                    'label' => 'Commentaire'
-                ],
-                'social' => [
-                    'label' => 'Réseaux sociaux',
-                    'description' => 'Les réseaux sociaux permettent d\'améliorer la convivialité du site et aident à sa promotion via les partages.'
-                ],
-                'support' => [
-                    'label' => 'Support'
-                ],
-                'video' => [
-                    'label' => 'Vidéo',
-                    'description' => 'Les services de partage de vidéo permettent d\'enrichir le site de contenu multimédia et augmentent sa visibilité.'
-                ]
+                'none' => []
             ],
-            // Liste des services associés aux groupes
+
+            /**
+             * Services list associated to groups
+             *
+             * Add a service:
+             *   service_id
+             *      - label        Service title
+             *      - descripition (optional) Service description
+             *      - url          (optional) External Url to cookies privacy-policy
+             *      - group        Associated group id
+             */
             'services' => [
-                // TOUS
+                /**
+                 * ALL
+                 *
+                 * - label     Service title
+                 * - customize Button label to customize service
+                 * - agree     Button label to accept service
+                 * - disagree  Button label to deny service
+                 * - disabled  Text displayed if the service is disabled
+                 * - allow     Button label to allow service under disabled text
+                 * - position  Position of the line "all services": before, after or both
+                 */
                 'all' => [
-                    // Nom du service
                     'label' => 'Préférences pour tous les services',
-                    // Label bu bouton "non défini"
                     'customize' => 'Je choisis',
-                    // Label du bouton "autoriser"
-                    'agree' => 'J\'accepte',
-                    // Label du bouton "interdire"
-                    'disagree' => 'Je refuse'
+                    'agree' => 'Accepter le service',
+                    'disagree' => 'Refuser le service',
+                    'disabled' => 'Le service {service} est désactivé.',
+                    'allow' => 'Autoriser {service}',
+                    'position' => 'both'
                 ],
 
                 // ANALYTICS
                 'analytics' => [
                     'label' => 'Google Analytics',
                     'url' => 'https://support.google.com/analytics/answer/6004245',
-                    'group' => 'analytics'
+                    'group' => 'none'
                 ],
                 'googletagmanager' => [
                     'label' => 'Google Tag Manager',
                     'url' => 'https://www.google.com/analytics/tag-manager/use-policy',
-                    'group' => 'analytics'
+                    'group' => 'none'
                 ],
 
                 // APIs
                 'googlemaps' => [
                     'label' => 'Google Maps',
                     'url' => 'https://developers.google.com/maps/terms',
-                    'group' => 'api'
-                ],
-                'googleplaceautocomplete' => [
-                    'label' => 'Place Autocomplete',
-                    'url' => 'https://developers.google.com/maps/terms',
-                    'group' => 'api'
+                    'group' => 'none'
                 ],
                 'recaptcha' => [
                     'label' => 'reCAPTCHA',
                     'url' => 'https://policies.google.com/privacy',
-                    'group' => 'api'
+                    'group' => 'none'
                 ],
 
                 // SOCIAL
                 'facebook' => [
                     'label' => 'Facebook',
                     'url' => 'https://www.facebook.com/policies/cookies',
-                    'group' => 'social'
+                    'group' => 'none'
                 ],
                 'twitter' => [
                     'label' => 'Twitter',
                     'url' => 'https://help.twitter.com/fr/rules-and-policies/twitter-cookies',
-                    'group' => 'social'
+                    'group' => 'none'
                 ],
                 'linkedin' => [
                     'label' => 'LinkedIn',
                     'url' => 'https://www.linkedin.com/legal/cookie_policy',
-                    'group' => 'social'
+                    'group' => 'none'
                 ],
 
                 // VIDEOS
                 'youtube' => [
                     'label' => 'YouTube',
                     'url' => 'https://policies.google.com/privacy',
-                    'group' => 'video'
+                    'group' => 'none'
                 ],
                 'vimeo' => [
                     'label' => 'Vimeo',
                     'url' => 'https://vimeo.com/privacy',
-                    'group' => 'video'
+                    'group' => 'none'
                 ]
             ]
         ];
@@ -148,8 +161,8 @@ abstract class Config {
      *
      * @return string
      */
-    public static function get() {
-        return htmlspecialchars(json_encode(self::set()));
+    public static function get(): string {
+        return json_encode(self::set(), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
     }
 
 }

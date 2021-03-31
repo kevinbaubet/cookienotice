@@ -1,162 +1,177 @@
 # Documentation CookieNotice
 
-* Compatibilité : IE10+
-* Dépendance : jQuery, PHP
+* Dependency: jQuery, PHP (to generate json config, but you can use other way to build json configuration data)
 
 
-## Principe de fonctionnement ([Rappel des obligations légales](https://www.cnil.fr/fr/exemple-de-bandeau-cookie))
+## Featuring
 
-**1ère étape** : une notice s'affiche pour informer l'utilisation des cookies pour une liste de services.
+**First step:** a notice is displayed to inform the user of cookies for a listing of services. The choice is mandatory to continue the navigation.
 
-**2ème étape** : un choix est fait si l'utilisateur :
-* clique sur le bouton de la notice "je choisis", pour choisir précisément les services déposant des cookies
-* clique sur le bouton de la notice "j'accepte", ce qui vaut pour acceptation de tous les cookies
-* clique sur le bouton de la notice "je refuse", ce qui interdit l'installation de tous les cookies
+**Second step:** a choice is made if the user:
+* clicks on the notice button "I accept", which will accept all cookies
+* clicks on the notice button "I deny", which will deny all cookies
+* clicks on the notice button "I customize", to customize the services one by one
+* clicks on the service button "Allow" after deny all services, which will accept only the wanted service
 
-**3ème étape** : dépôt d'un cookie pour enregistrer le consentement de l'utilisateur :
-* pendant une durée maximum de 13 mois
-* possiblité de changer d'avis en retournant sur la personnalisation des services
+**Third step:** the deposit of one cookie to save user consent:
+* for a maximum duration of 13 months
+* there is a possibility of changing to return to customized services
 
 
 ## Initialisation
 
-    <?php require_once '../src/CookieNotice/Config.php'; // A configurer ?>
-    <?php require_once '../src/CookieNotice/Service.php'; // Optionnel ?>
+    <?php require_once '../src/CookieNotice/Config.php'; // To configure ?>
+    <?php require_once '../src/CookieNotice/Service.php'; // Optional ?>
     
-    <div id="notice-cookie" data-config="<?php echo \CookieNotice\Config::get(); ?>"></div>
+    <div id="notice-cookie" data-config="<?php echo htmlspecialchars(\CookieNotice\Config::get()); ?>"></div>
     
     $('#notice-cookie').cookieNotice([options]);
     
-    <a href="#" class="cookienotice-customize">Gestion des cookies</a>
+    <a href="#" class="cookienotice-customize">Customize the cookies</a>
 
 
-## Côté PHP
+## PHP side
 
-### Configuration (obligatoire)
+### Configuration (mandatory)
 
-La configuration de **CookieNotice** se passe dans le fichier _CookieNotice/Config.php_ dans la méthode _Config::set()_.
-C'est à vous de gérer la traduction en fonction de vos préférences.
+The configuration of **CookieNotice** is in this file _CookieNotice/Config.php_ in method _Config::set()_.
+You can translate texts in this file.
 
-___notice___ : Configuration du bandeau notice
-* _description_ : Contenu de la notice
-* _summary_ : Résumé de la notice affichée en version mobile
-* _customize_ : Label du bouton pour personnaliser les services
-* _agree_ : Label du bouton pour accepter tous les services
-* _disagree_ : Label du bouton pour refuser tous les services
+___notice___: Notice configuration
+* _description_: Notice contents
+* _summary_: Summary of notice contents showed in mobile
+* _agree_: Button label to customize services
+* _disagree_: Button label to accept all services
+* _customize_: Button label to deny all services
    
-___modal___ : Configuration de la popup pour personnaliser les services. Commentez cette partie pour ne pas autoriser la personnalisation des services
-* _label_ : Nom de la popup
-* _labelTag_ : Balise utilisé pour les labels. Si hN, les sous-titres seront automatiquement incrémentés (optionnel)
-* _description_ : Description de la popup (optionnel)
-* _close_ : Nom du bouton de fermeture
+(optional) ___modal___: Modal configuration to customize services
+* _label_: Modal title
+* _labelTag_: (optional) Tag used for modal title. If hN, the subtitles will be increase automatically
+* _description_: (optional) Modal description
+* _close_: Button label to close modal
     
-___groups___ : Liste des groupes de services
-* ___id___ : Identifiant du groupe (ex: "social")
-    * _label_ : Nom du groupe
-    * _description_ : Description du groupe (optionnel)
+___groups___: Groups list of services
+* ___group_id___: Default: none. For example: video 
+    * _label_: Group title
+    * _description_: (optional) Group description
         
-___services___ : Liste des services associés aux groupes
-* ___id___ : Identifiant du service (ex: "facebook")
-  * _label_ : Nom du service
-  * _description_ : Description du service (optionnel)
-  * _url_ : URL vers les termes d'utilisation/politique de confidentialité du service
-  * _group_ : Identifiant du groupe à rattacher
+___services___: Services list associated to groups
+* __all__: for all services
+  * _label_: Service title
+  * _customize_: Button label to customize service
+  * _agree_: Button label to accept service
+  * _disagree_: Button label to deny service
+  * _disabled_: Text displayed if the service is disabled
+  * _allow_: Button label to allow service under disabled text
+  * _position_: Position of the line "all services": before, after or both
+
+* ___service_id___: for example: youtube or video
+  * _label_: Service title
+  * _description_: (optional) Service description
+  * _url_: (optional) External Url to cookies privacy-policy
+  * _group_: Associated group id
       
       
-### Méthodes
+### Methods
 
 * namespace : **CookieNotice**
 * classe    : **Service**
         
-| Méthode            | Arguments                                                                                                                                                          | Description                                                                                       |
-|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| getState           | **service** *string* Identifiant du service, exemple : "facebook"                                                                                                  | Récupération de l'état du service. Si le choix n'a pas été fait, l'état retourné est "undefined"  |                 
-| isAllowed          | **service** *string* Identifiant du service, exemple : "facebook"                                                                                                  | Détermine si un service est autorisé                                                              |                 
-| hasConsent         | -                                                                                                                                                                  | Détermine si il y a eu un consentement (accepté ou non)                                           |
+| Method             | Arguments                                                        | Description                                                                           |
+|--------------------|------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| getState           | **service** *string* Service identifier, for example: "youtube"  | Return true if the service is allowed                                                 |                 
+| isAllowed          | **service** *string* Service identifier, for example: "youtube"  | Return the state of service. If there is no choice, the returned state is "undefined" |                 
+| hasConsent         | -                                                                | Return true if there is a saved consent                                               |
 
 
-### Tester les choix des services
+### Test allowed services
+
+I recommend to test in JS side to exempt cache issues
 
     if (\CookieNotice\Service::isAllowed('facebook'))) {
         // OK
     }
     
-    // ou
+    // or
     
     $state = \CookieNotice\Service::getState('facebook');
     if ($state === true) {
         // OK
     }
     
-    // Il y a-t-il un consentement enregistré ?
+    // Saved consent?
     if (\CookieNotice\Service::hasConsent()) {
         // OK
     }
 
 
-## Côté JS
+## JS side
 
 ### Options
 
-| Option                               | Type     | Valeur par défaut                                            | Description                                                                     |
-|--------------------------------------|----------|--------------------------------------------------------------|---------------------------------------------------------------------------------|
-| classes                              | object   | Voir ci-dessous                                              | Objet pour les options ci-dessous                                               |
-| &nbsp;&nbsp;&nbsp;&nbsp;prefix       | string   | 'cookienotice'                                               | Classe de préfix                                                                |
-| &nbsp;&nbsp;&nbsp;&nbsp;notice       | string   | 'notice notice--cookie'                                      | Classe pour la notice                                                           |
-| &nbsp;&nbsp;&nbsp;&nbsp;noticeOpen   | string   | 'is-{prefix}-notice-open'                                    | Classe pour la notice à l'état ouvert                                           |
-| &nbsp;&nbsp;&nbsp;&nbsp;modal        | string   | 'modal modal--cookie'                                        | Classe pour la modale                                                           |
-| &nbsp;&nbsp;&nbsp;&nbsp;modalOpen    | string   | 'is-{prefix}-modal-open'                                     | Classe pour la modale à l'état ouvert                                           |
-| &nbsp;&nbsp;&nbsp;&nbsp;btnAgree     | string   | '{prefix}-agree'                                             | Classe du bouton pour accepter (ex: 'btn btn--primary')                         |
-| &nbsp;&nbsp;&nbsp;&nbsp;btnDisagree  | string   | '{prefix}-disagree'                                          | Classe du bouton pour refuser (ex: 'btn btn--secondary')                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;btnCustomize | string   | '{prefix}-customize'                                         | Classe du bouton pour personnaliser (ex: 'btn btn--secondary')                  |
-| &nbsp;&nbsp;&nbsp;&nbsp;active       | string   | 'is-active'                                                  | Classe pour l'état actif d'un service                                           |
-| &nbsp;&nbsp;&nbsp;&nbsp;inactive     | string   | 'is-inactive'                                                | Classe pour l'état inactif d'un service                                         |
-| reload                               | boolean  | false                                                        | Lors du consentement, un rechargement de la page est effectué                   |
-| summary                              | int/bool | 767                                                          | Largeur max en px pour afficher le résumé de la notice. "false" pour désactiver |
-| cookieDuration                       | integer  | 13*30                                                        | Durée d'enregistrement du cookie du consentement                                |
-| tabindexStart                        | integer  | 0                                                            | Valeur de l'attribut tabindex au chargement de CookieNotice                     |
-| afterWrapNotice                      | function | undefined                                                    | Callback après l'ajout de la notice dans la page                                |
-| afterWrapModal                       | function | undefined                                                    | Callback après l'ajout de la modale dans la page                                |
-| afterEventsHandler                   | function | undefined                                                    | Callback après la déclaration des événements                                    |
-| onChangeState                        | function | undefined                                                    | Callback une fois le choix effectué                                             |
+| Option                                   | Type     | Default value              | Description                                                        |
+|------------------------------------------|----------|----------------------------|--------------------------------------------------------------------|
+| classes                                  | object   | See below                  | Object for below options                                           |
+| &nbsp;&nbsp;&nbsp;&nbsp;prefix           | string   | 'cookienotice'             | Prefix class name                                                  |
+| &nbsp;&nbsp;&nbsp;&nbsp;notice           | string   | 'notice notice--cookie'    | Class for notice                                                   |
+| &nbsp;&nbsp;&nbsp;&nbsp;noticeOpen       | string   | 'is-{prefix}-notice-open'  | Class for notice when is opened                                    |
+| &nbsp;&nbsp;&nbsp;&nbsp;modal            | string   | 'modal modal--cookie'      | Class for modal                                                    |
+| &nbsp;&nbsp;&nbsp;&nbsp;modalOpen        | string   | 'is-{prefix}-modal-open'   | Class for modal when is opened                                     |
+| &nbsp;&nbsp;&nbsp;&nbsp;serviceHandler   | string   | '{prefix}-service-handler' | Class for service handler wrapper                                  |
+| &nbsp;&nbsp;&nbsp;&nbsp;serviceAgreed    | string   | 'is-agreed'                | Class for the service which is agreed                              |
+| &nbsp;&nbsp;&nbsp;&nbsp;serviceDisagreed | string   | 'is-disagreed'             | Class for the service which is disagreed                           |
+| &nbsp;&nbsp;&nbsp;&nbsp;btnAgree         | string   | '{prefix}-agree'           | Class for agree button                                             |
+| &nbsp;&nbsp;&nbsp;&nbsp;btnDisagree      | string   | '{prefix}-disagree'        | Class for disagree button                                          |
+| &nbsp;&nbsp;&nbsp;&nbsp;btnCustomize     | string   | '{prefix}-customize'       | Class for customize button                                         |
+| &nbsp;&nbsp;&nbsp;&nbsp;active           | string   | 'is-active'                | Class pour l'état actif d'un service                               |
+| &nbsp;&nbsp;&nbsp;&nbsp;inactive         | string   | 'is-inactive'              | Class pour l'état inactif d'un service                             |
+| reload                                   | boolean  | false                      | Enable reloading current url after a change of service state       |
+| summary                                  | int/bool | 767                        | Max witdh in pixel to show the summary of notice. False to disable |
+| cookieDuration                           | integer  | 13*30                      | Consent storage duration                                           |
+| tabindexStart                            | integer  | 0                          | Value of tabindex attribute at CookieNotice initialisation         |
+| afterWrapNotice                          | function | undefined                  | Callback after the notice added to DOM                             |
+| afterWrapModal                           | function | undefined                  | Callback after the modal added to DOM                              |
+| afterWrapServiceHandler                  | function | undefined                  | Callback after the service handler added to DOM                    |
+| afterEventsHandler                       | function | undefined                  | Callback after register events                                     |
+| onChangeState                            | function | undefined                  | Callback on change service state (all or service)                  |
 
 
-### Méthodes
+### Methods
 
-| Méthode            | Arguments                                                                                                                                                          | Description                                                                                       |
-|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| notice             | **action** *string* Action "show" ou "hide"                                                                                                                        | Show/hide notice                                                                                  |
-| modal              | **action** *string* Action "show" ou "hide"                                                                                                                        | Show/hide modal                                                                                   |
-| agree              | **service** *string* Identifiant du service, exemple : "facebook"                                                                                                  | Accepte un service                                                                                |
-| disagree           | **service** *string* Identifiant du service, exemple : "facebook"                                                                                                  | Refuse un service                                                                                 |
-| setState           | **service** *string* Identifiant du service, exemple : "facebook", **state** *mixed* true, false ou 'undefined' pour définir le choix du service                   | Définition de l'état du service                                                                   |
-| loadStates         | -                                                                                                                                                                  | Chargement des états des services depuis le cookie                                                |
-| getState           | **service** *string* Identifiant du service, exemple : "facebook"                                                                                                  | Récupération de l'état du service. Si le choix n'a pas été fait, l'état retourné est "undefined"  |                 
-| isAllowed          | **service** *string* Identifiant du service, exemple : "facebook"                                                                                                  | Détermine si un service est autorisé                                                              |                 
-| hasConsent         | -                                                                                                                                                                  | Détermine si il y a eu un consentement (accepté ou non)                                           |
-| reload             | -                                                                                                                                                                  | Rechargement de la page                                                                           |
-| getCookie          | **name** *string* Nom du cookie                                                                                                                                    | Récupération de la valeur d'un cookie                                                             |
-| setCookie          | **name** *string* Nom du cookie, **value** *string* Valeur à écrire, **duration** *int* Nombre de jour avant expiration, **path** *string* Chemin de stokage       | Stocker une valeur dans cookie                                                                    |
-| removeCookie       | **name** *string* Nom du cookie, **path** *string* Chemin de stokage                                                                                               | Supprimer un cookie                                                                               |
-| destroy            | -                                                                                                                                                                  | Supprime CookieNotice de la page                                                                  |
+| Method             | Arguments                                                                                                                                                                  | Description                                                                           |
+|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| notice             | **action** *string* Action "show" or "hide"                                                                                                                                | Show/hide notice                                                                      |
+| modal              | **action** *string* Action "show" or "hide"                                                                                                                                | Show/hide modal                                                                       |
+| agree              | **service** *string* Service identifier                                                                                                                                    | Agree a service                                                                       |
+| disagree           | **service** *string* Service identifier                                                                                                                                    | Disagree a service                                                                    |
+| setState           | **service** *string* Service identifier, **state** *mixed* true, false or "undefined" to define the service state                                                          | Set the state of service                                                              |
+| loadStates         | -                                                                                                                                                                          | Load services state from cookie storage                                               |
+| getState           | **service** *string* Service identifier                                                                                                                                    | Return the state of service. If there is no choice, the returned state is "undefined" |                 
+| isAllowed          | **service** *string* Service identifier                                                                                                                                    | Return true if the service is allowed                                                 |                 
+| hasConsent         | -                                                                                                                                                                          | Return true if there is a saved consent                                               |
+| reload             | -                                                                                                                                                                          | Reload current url                                                                    |
+| getCookie          | **name** *string* Cookie name                                                                                                                                              | Get cookie value                                                                      |
+| setCookie          | **name** *string* Cookie name, **value** *string* Cookie value, **duration** *int* Duration in day, **path** *string="/"* Storage path, **secure** *bool=true* Secure mode | Set cookie value                                                                      |
+| removeCookie       | **name** *string* Cookie name, **path** *string* Storage path                                                                                                              | Remove a cookie                                                                       |
+| destroy            | -                                                                                                                                                                          | Remove CookieNotice from DOM                                                          |
 
 
-### Tester les choix des services
+### Test allowed services
 
-    var cookieNotice = $('#notice-cookie').cookieNotice();
+    let cookieNotice = $('#notice-cookie').cookieNotice();
     
     if (cookieNotice.isAllowed('facebook')) {
         // OK
     }
     
-    // ou
+    // or
 
     var state = cookieNotice.getState('facebook');
     if (state === true) {
         // OK
     }
     
-    // Il y a-t-il un consentement enregistré ?
+    // Savec consent?
     if (cookieNotice.hasConsent()) {
         // OK
     }

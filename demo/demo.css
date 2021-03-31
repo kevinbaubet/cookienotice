@@ -63,30 +63,26 @@ pre {
     font-size: 1.2em;
     line-height: 1.4;
 }
-
-
-.modal--cookie a {
-    text-decoration: none;
+.services {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
+.service {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    width: 386px;
+    height: 240px;
+    background: rgba(0, 0, 0, .5);
+}
+.service span {
+    color: #fff;
+    font-size: 1.1em;
+}
+
 .cookienotice-customize:focus {
     outline: 1px dotted #fff;
-}
-
-.cookienotice-btn {
-    padding: 10px 15px;
-    font-weight: bold;
-    border: 1px solid transparent;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: .3s;
-    white-space: nowrap;
-}
-.cookienotice-btn:hover,
-.cookienotice-btn:focus {
-     text-decoration: none;
-}
-.cookienotice-btn--secondary {
-    background-color: transparent;
-    color: #fff;
-    border-color: #fff;
 }

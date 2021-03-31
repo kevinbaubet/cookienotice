@@ -13,7 +13,7 @@
         // Config
         $.extend(true, this.settings = {}, $.CookieNotice.defaults, options);
 
-        // Élements
+        // Elements
         this.elements = {
             body: $('body'),
             container: container
@@ -22,6 +22,7 @@
         // Variables
         this.config = this.elements.container.attr('data-config');
         this.cookieName = 'cookienotice';
+        this.triggerTimeout = undefined;
 
         // Init
         if (this.prepareOptions()) {
@@ -38,6 +39,9 @@
             noticeOpen: 'is-{prefix}-notice-open',
             modal: 'modal modal--cookie',
             modalOpen: 'is-{prefix}-modal-open',
+            serviceHandler: '{prefix}-service-handler',
+            serviceAgreed: 'is-agreed',
+            serviceDisagreed: 'is-disagreed',
             btnAgree: '{prefix}-agree',
             btnDisagree: '{prefix}-disagree',
             btnCustomize: '{prefix}-customize',
@@ -46,10 +50,11 @@
         },
         reload: false,
         summary: 767,
-        cookieDuration: 13*30, // 13 mois, durée max pour stocker le consentement
+        cookieDuration: 13*30, // 13 months, the legal maximum duration
         tabindexStart: 0,
         afterWrapNotice: undefined,
         afterWrapModal: undefined,
+        afterWrapServiceHandler: undefined,
         afterEventsHandler: undefined,
         onChangeState: undefined
     };
@@ -58,7 +63,7 @@
 
     $.CookieNotice.prototype = {
         /**
-         * Préparation des options utilisateur
+         * Prepare user options
          *
          * @return {boolean}
          */
@@ -102,13 +107,14 @@
             }
 
             this.wrapModal();
+            this.wrapServiceHandler();
             this.eventsHandler();
 
             return this;
         },
 
         /**
-         * Destruction
+         * Destroy CookieNotice
          */
         destroy: function () {
             this.elements.container.remove();
@@ -120,12 +126,12 @@
         },
 
         /**
-         * Wrapper et contenu de la notice
+         * Build the notice contents
          */
         wrapNotice: function () {
-            var btnsCustomize = [];
-            var btnCustomizeInBody;
-            var btnCustomize;
+            let btnsCustomize = [];
+            let btnCustomizeInBody = null;
+            let btnCustomize = null;
 
             // Wrapper
             this.elements.noticeWrapper = $('<div>', {
@@ -134,9 +140,9 @@
 
             // Description
             if (this.config.notice.description !== undefined && this.config.notice.description !== '') {
-                this.elements.noticeDescription = $('<p>', {
+                this.elements.noticeDescription = $('<div>', {
                     'class': this.settings.classes.prefix + '-notice-description',
-                    html   : this.config.notice.description
+                    html: this.formatDescription(this.config.notice.description)
                 });
 
                 this.elements.noticeDescription.appendTo(this.elements.noticeWrapper);
@@ -147,9 +153,30 @@
                 'class': this.settings.classes.prefix + '-notice-actions'
             });
 
+            // Btn agree
+            if (this.config.notice.agree !== undefined && this.config.notice.agree !== '') {
+                this.elements.btnAgree = $('<button>', {
+                    'class': this.settings.classes.prefix + '-btn ' + this.settings.classes.prefix + '-btn--primary ' + this.settings.classes.btnAgree,
+                    html: $('<span>', {
+                        html: this.config.notice.agree
+                    })
+                }).appendTo(this.elements.noticeActionsWrapper);
+            }
+
+            // Btn disagree
+            if (this.config.notice.disagree !== undefined && this.config.notice.disagree !== '') {
+                this.elements.btnDisagree = $('<button>', {
+                    'class': this.settings.classes.prefix + '-btn ' + this.settings.classes.prefix + '-btn--secondary ' + this.settings.classes.btnDisagree,
+                    html: $('<span>', {
+                        html: this.config.notice.disagree
+                    })
+                }).appendTo(this.elements.noticeActionsWrapper);
+            }
+
+            // Btn customize
             if (this.config.modal !== undefined && this.config.notice.customize !== undefined && this.config.notice.customize !== '') {
                 btnCustomize = $('<button>', {
-                    'class': this.settings.classes.prefix + '-btn ' + this.settings.classes.prefix + '-btn--secondary ' + this.settings.classes.btnCustomize,
+                    'class': this.settings.classes.prefix + '-btn ' + this.settings.classes.prefix + '-btn--tertiary ' + this.settings.classes.btnCustomize,
                     html: $('<span>', {
                         html: this.config.notice.customize
                     })
@@ -163,24 +190,6 @@
                 }
 
                 this.elements.btnCustomize = $(btnsCustomize);
-            }
-
-            if (this.config.notice.agree !== undefined && this.config.notice.agree !== '') {
-                this.elements.btnAgree = $('<button>', {
-                    'class': this.settings.classes.prefix + '-btn ' + this.settings.classes.prefix + '-btn--primary ' + this.settings.classes.btnAgree,
-                    html: $('<span>', {
-                        html: this.config.notice.agree
-                    })
-                }).appendTo(this.elements.noticeActionsWrapper);
-            }
-
-            if (this.config.notice.disagree !== undefined && this.config.notice.disagree !== '') {
-                this.elements.btnDisagree = $('<button>', {
-                    'class': this.settings.classes.prefix + '-btn ' + this.settings.classes.prefix + '-btn--secondary ' + this.settings.classes.btnDisagree,
-                    html: $('<span>', {
-                        html: this.config.notice.disagree
-                    })
-                }).appendTo(this.elements.noticeActionsWrapper);
             }
 
             this.elements.noticeActionsWrapper.appendTo(this.elements.noticeWrapper);
@@ -200,17 +209,19 @@
         /**
          * Show/hide notice
          *
-         * @param {string} action "show" ou "hide"
+         * @param {string} action "show" or "hide"
          */
         notice: function (action) {
             this.elements.body[(action === 'hide' ? 'remove' : 'add') + 'Class'](this.settings.classes.noticeOpen);
+
+            return this;
         },
 
         /**
-         * Wrapper et contenu de la modale
+         * Build the modal contents
          */
         wrapModal: function () {
-            var self = this;
+            let self = this;
 
             if (self.config.modal !== undefined) {
                 // Wrapper
@@ -225,6 +236,7 @@
                     'class': self.settings.classes.prefix + '-modal-header'
                 });
 
+                // Title
                 if (self.config.modal.label !== undefined && self.config.modal.label !== '') {
                     $('<' + (self.config.modal.labelTag || 'p') + '>', {
                         'class': self.settings.classes.prefix + '-modal-label',
@@ -233,16 +245,21 @@
 
                     self.elements.modalWrapper.attr('aria-label', self.config.modal.label);
                 }
+
+                // Description
                 if (self.config.modal.description !== undefined && self.config.modal.description !== '') {
                     $('<div>', {
                         'class': self.settings.classes.prefix + '-modal-description',
-                        html: self.config.modal.description
+                        html: self.formatDescription(self.config.modal.description)
                     }).appendTo(self.elements.modalHeader);
                 }
+
+                // Btn close
                 if (self.config.modal.close !== undefined && self.config.modal.close !== '') {
                     self.elements.modalClose = $('<button>', {
                         'class': self.settings.classes.prefix + '-modal-close',
                         html: $('<span>', {
+                            'class': 'sr-only',
                             html: self.config.modal.close
                         })
                     }).appendTo(self.elements.modalHeader);
@@ -251,123 +268,7 @@
                 self.elements.modalHeader.appendTo(self.elements.modalWrapper);
 
                 // Services
-                if (self.config.services !== undefined) {
-                    var servicesByGroups = {};
-                    $.each(this.config.services, function (service, options) {
-                        if (service !== 'all') {
-                            if (servicesByGroups[options.group] === undefined) {
-                                servicesByGroups[options.group] = [];
-                            }
-
-                            servicesByGroups[options.group].push(service);
-                        }
-                    });
-
-                    self.elements.servicesWrapper = $('<div>', {
-                        'class': self.settings.classes.prefix + '-services'
-                    });
-                    
-                    var serviceLabelTag = self.config.modal.labelTag || 'p';
-                    if (serviceLabelTag.indexOf('h') !== -1) {
-                        var serviceLabelTagLevel = parseInt(serviceLabelTag.substring(1));
-                        serviceLabelTagLevel++;
-                        serviceLabelTag = 'h' + serviceLabelTagLevel;
-                    }
-
-                    // All
-                    if (self.config.services.all !== undefined) {
-                        self.elements.serviceAllWrapper = $('<div>', {
-                            'class': self.settings.classes.prefix + '-service ' + self.settings.classes.prefix + '-service--all',
-                            'data-service': 'all'
-                        });
-
-                        $('<' + serviceLabelTag + '>', {
-                            'class': self.settings.classes.prefix + '-service-all-label',
-                            html   : self.config.services.all.label
-                        }).appendTo(self.elements.serviceAllWrapper);
-
-                        self.wrapServiceActions('all').appendTo(self.elements.serviceAllWrapper);
-                        self.elements.serviceAllWrapper.appendTo(self.elements.servicesWrapper);
-                    }
-
-                    // Groupe => Services
-                    var groupsList = $('<ul>');
-                    var groupIndex = 0;
-                    var groupLength = Object.keys(servicesByGroups).length;
-                    $.each(servicesByGroups, function (group, services) {
-                        var groupWrapper = $('<li>', {
-                            'class': self.settings.classes.prefix + '-group ' + self.settings.classes.prefix + '-group--' + group
-                        }).appendTo(groupsList);
-
-                        if (self.config.groups[group].label !== undefined && self.config.groups[group].label !== '') {
-                            $('<' + serviceLabelTag + '>', {
-                                'class': self.settings.classes.prefix + '-group--label',
-                                html: self.config.groups[group].label
-                            }).appendTo(groupWrapper);
-                        }
-                        if (self.config.groups[group].description !== undefined && self.config.groups[group].description !== '') {
-                            $('<p>', {
-                                'class': self.settings.classes.prefix + '-group--description',
-                                html: self.config.groups[group].description
-                            }).appendTo(groupWrapper);
-                        }
-
-                        if (services.length) {
-                            var servicesList = $('<ul>');
-
-                            $.each(services, function (i, service) {
-                                var serviceWrapper = $('<li>', {
-                                    'class': self.settings.classes.prefix + '-service ' + self.settings.classes.prefix + '-service--' + service,
-                                    'data-service': service
-                                });
-                                var serviceLabelWrapper = $('<div>', {
-                                    'class': self.settings.classes.prefix + '-service-label-wrapper'
-                                });
-
-                                // Label
-                                var serviceLabel;
-                                var serviceLabelAttributes = {
-                                    'class': self.settings.classes.prefix + '-service-label',
-                                    html: self.config.services[service].label
-                                };
-                                if (self.config.services[service].url !== undefined && self.config.services[service].url !== '') {
-                                    serviceLabelAttributes['href'] = self.config.services[service].url;
-                                    serviceLabelAttributes['tabindex'] = self.settings.tabindexStart;
-                                    serviceLabel = $('<a>', serviceLabelAttributes);
-                                } else {
-                                    serviceLabel = $('<span>', serviceLabelAttributes);
-                                }
-                                serviceLabel.appendTo(serviceLabelWrapper);
-
-                                // Description
-                                if (self.config.services[service].description !== undefined && self.config.services[service].description !== '') {
-                                    var serviceDescription = $('<p>', {
-                                        'class': self.settings.classes.prefix + '-service-description',
-                                        html: self.config.services[service].description
-                                    });
-                                    serviceDescription.appendTo(serviceLabelWrapper);
-                                }
-
-                                // Last service
-                                if (groupIndex === groupLength-1 && i === services.length-1) {
-                                    serviceWrapper.addClass('is-last');
-                                }
-
-                                serviceLabelWrapper.appendTo(serviceWrapper);
-                                self.wrapServiceActions(service).appendTo(serviceWrapper);
-                                serviceWrapper.appendTo(servicesList);
-                            });
-
-                            servicesList.appendTo(groupWrapper);
-                        }
-
-                        groupIndex++;
-                    });
-
-                    groupsList.appendTo(self.elements.servicesWrapper);
-                    self.elements.servicesWrapper.appendTo(self.elements.modalWrapper);
-                }
-
+                self.wrapServices();
                 self.elements.modalWrapper.appendTo(self.elements.container);
 
                 // User callback
@@ -388,21 +289,161 @@
         },
 
         /**
-         * Wrapper des actions par service
+         * Build the list of services in modal
+         */
+        wrapServices: function () {
+            let self = this;
+
+            if (self.config.services !== undefined) {
+                let servicesByGroups = {};
+                $.each(self.config.services, function (service, options) {
+                    if (service !== 'all') {
+                        if (servicesByGroups[options.group] === undefined) {
+                            servicesByGroups[options.group] = [];
+                        }
+
+                        servicesByGroups[options.group].push(service);
+                    }
+                });
+
+                self.elements.servicesWrapper = $('<div>', {
+                    'class': self.settings.classes.prefix + '-services'
+                });
+
+                let serviceLabelTag = self.config.modal.labelTag || 'p';
+                if (serviceLabelTag.indexOf('h') !== -1) {
+                    let serviceLabelTagLevel = parseInt(serviceLabelTag.substring(1));
+                    serviceLabelTagLevel++;
+                    serviceLabelTag = 'h' + serviceLabelTagLevel;
+                }
+
+                // All
+                if (self.config.services.all !== undefined) {
+                    self.elements.serviceAllWrapper = $('<div>', {
+                        'class': self.settings.classes.prefix + '-service ' + self.settings.classes.prefix + '-service--all',
+                        'data-service': 'all'
+                    });
+
+                    $('<' + serviceLabelTag + '>', {
+                        'class': self.settings.classes.prefix + '-service-all-label',
+                        html   : self.config.services.all.label
+                    }).appendTo(self.elements.serviceAllWrapper);
+
+                    self.wrapServiceActions('all').appendTo(self.elements.serviceAllWrapper);
+
+                    if (self.config.services.all.position === 'before' || self.config.services.all.position === 'both') {
+                        self.elements.serviceAllWrapper.appendTo(self.elements.servicesWrapper);
+                    }
+                }
+
+                // Group => Services
+                let groupsList = $('<ul>');
+                let groupIndex = 0;
+                let groupLength = Object.keys(servicesByGroups).length;
+                $.each(servicesByGroups, function (group, services) {
+                    let groupWrapper = $('<li>', {
+                        'class': self.settings.classes.prefix + '-group ' + self.settings.classes.prefix + '-group--' + group
+                    }).appendTo(groupsList);
+
+                    if (self.config.groups[group].label !== undefined && self.config.groups[group].label !== '') {
+                        $('<' + serviceLabelTag + '>', {
+                            'class': self.settings.classes.prefix + '-group--label',
+                            html: self.config.groups[group].label
+                        }).appendTo(groupWrapper);
+                    }
+                    if (self.config.groups[group].description !== undefined && self.config.groups[group].description !== '') {
+                        $('<p>', {
+                            'class': self.settings.classes.prefix + '-group--description',
+                            html: self.formatDescription(self.config.groups[group].description)
+                        }).appendTo(groupWrapper);
+                    }
+
+                    if (services.length) {
+                        let servicesList = $('<ul>');
+
+                        $.each(services, function (i, service) {
+                            let serviceWrapper = $('<li>', {
+                                'class': self.settings.classes.prefix + '-service ' + self.settings.classes.prefix + '-service--' + service,
+                                'data-service': service
+                            });
+                            let serviceLabelWrapper = $('<div>', {
+                                'class': self.settings.classes.prefix + '-service-label-wrapper'
+                            });
+
+                            // Label
+                            let serviceLabel;
+                            let serviceLabelAttributes = {
+                                'class': self.settings.classes.prefix + '-service-label',
+                                html: self.config.services[service].label
+                            };
+                            if (self.config.services[service].url !== undefined && self.config.services[service].url !== '') {
+                                serviceLabelAttributes['href'] = self.config.services[service].url;
+                                serviceLabelAttributes['tabindex'] = self.settings.tabindexStart;
+                                serviceLabel = $('<a>', serviceLabelAttributes);
+                            } else {
+                                serviceLabel = $('<span>', serviceLabelAttributes);
+                            }
+                            serviceLabel.appendTo(serviceLabelWrapper);
+
+                            // Description
+                            if (self.config.services[service].description !== undefined && self.config.services[service].description !== '') {
+                                let serviceDescription = $('<p>', {
+                                    'class': self.settings.classes.prefix + '-service-description',
+                                    html: self.formatDescription(self.config.services[service].description)
+                                });
+                                serviceDescription.appendTo(serviceLabelWrapper);
+                            }
+
+                            // Last service
+                            if (groupIndex === groupLength-1 && i === services.length-1) {
+                                serviceWrapper.addClass('is-last');
+                            }
+
+                            serviceLabelWrapper.appendTo(serviceWrapper);
+                            self.wrapServiceActions(service).appendTo(serviceWrapper);
+                            serviceWrapper.appendTo(servicesList);
+                        });
+
+                        servicesList.appendTo(groupWrapper);
+                    }
+
+                    groupIndex++;
+                });
+
+                groupsList.appendTo(self.elements.servicesWrapper);
+
+                if (self.config.services.all !== undefined && (self.config.services.all.position === 'after' || self.config.services.all.position === 'both')) {
+                    if (self.config.services.all.position === 'both') {
+                        let serviceAllAfter = self.elements.serviceAllWrapper.clone();
+                        serviceAllAfter.appendTo(self.elements.servicesWrapper);
+                        self.elements.serviceAllWrapper.push(serviceAllAfter);
+                    } else {
+                        self.elements.serviceAllWrapper.appendTo(self.elements.servicesWrapper);
+                    }
+                }
+
+                self.elements.servicesWrapper.appendTo(self.elements.modalWrapper);
+                self.elements.serviceAction = self.elements.servicesWrapper.find('.' + self.settings.classes.prefix + '-service-action');
+            }
+        },
+
+        /**
+         * Build the actions for a service in modal
          *
          * @param {string} service
          */
         wrapServiceActions: function (service) {
-            var self = this;
-            var state = self.getState(service);
-            var actions = $('<div>', {
+            let self = this;
+            let actions = $('<div>', {
                 'class': self.settings.classes.prefix + '-service-actions'
             });
 
             if (self.config.services.all['agree'] !== undefined && self.config.services.all['agree'] !== '' && self.config.services.all['disagree'] !== undefined && self.config.services.all['disagree'] !== '') {
+                let state = self.getState(service);
+
                 if (service === 'all') {
-                    var count = 0;
-                    var none = false;
+                    let count = 0;
+                    let none = false;
                     $.each($.CookieNotice.services, function (allService, allState) {
                         if (allState === true) {
                             count++;
@@ -412,13 +453,13 @@
                         }
                     });
 
-                    var checkedState = count === Object.keys($.CookieNotice.services).length;
+                    let checkedState = count === Object.keys($.CookieNotice.services).length;
                     state = none ? 'undefined' : (count > 0 && !checkedState ? 'undefined' : checkedState);
                 }
 
                 // Switch
-                var serviceActionWrapper = $('<span>', {
-                    'class': self.settings.classes.prefix + '-service-action ' + (state === 'undefined' ? '' : (state ? self.settings.classes.active : self.settings.classes.inactive))
+                let serviceActionWrapper = $('<span>', {
+                    'class': self.settings.classes.prefix + '-service-action ' + (state === 'undefined' ? '' : (state ? self.settings.classes.serviceAgreed : self.settings.classes.serviceDisagreed))
                 });
                 $('<span>', {
                     'class': self.settings.classes.prefix + '-service-action-input',
@@ -448,193 +489,216 @@
         /**
          * Show/hide modal
          *
-         * @param {string} action "show" ou "hide"
+         * @param {object} event Current event
+         * @param {string} action "show" or "hide"
          */
-        modal: function (action) {
-            var self = this;
+        modal: function (event, action) {
+            let self = this;
 
-            self.elements.body[(action === 'hide' ? 'remove' : 'add') + 'Class'](self.settings.classes.modalOpen);
-
-            if (action === 'show') {
-                setTimeout(function () {
-                    self.elements.modalWrapper.focus();
-                }, 100);
-            }
-
-            if (action === 'hide' && self.elements.openBtn !== undefined && self.elements.openBtn.length) {
-                setTimeout(function () {
-                    self.elements.openBtn = undefined;
-                }, 200);
-            }
-        },
-
-        /**
-         * Gestionnaire d'événements
-         */
-        eventsHandler: function () {
-            var self = this;
-            var closeModal;
-
-            // Notice description
-            if (self.settings.summary !== false && self.elements.noticeDescription.length && self.config.notice.summary !== undefined && self.config.notice.summary !== '' && $(window).width() <= self.settings.summary) {
-                self.elements.noticeDescription.html(self.config.notice.summary);
-
-                self.elements.noticeDescription.on('click', function (event) {
-                    if (!$(event.target).is('a') && self.elements.noticeDescription.html() !== self.config.notice.description) {
-                        self.elements.noticeDescription.html(self.config.notice.description);
+            if (event !== undefined) {
+                // SHOW
+                if (action === 'show' && (event.type === 'click' || event.type === 'keyup' && (event.key === 'Enter' || event.key === ' '))) {
+                    // Don't trigger multiple events
+                    if (self.triggerTimeout !== undefined) {
+                        clearTimeout(self.triggerTimeout);
                     }
-                });
-            }
 
-            // Bouton "ok"
-            if (self.elements.btnAgree !== undefined && self.elements.btnAgree.length) {
-                self.elements.btnAgree.one('click.cookienotice.btnAgree', function () {
-                    self.agree();
-                    self.notice('hide');
-
-                    if (self.settings.reload) {
-                        self.reload();
-
-                    } else if (self.elements.serviceAction.length) {
-                        self.elements.serviceAction.each(function (i, btn) {
-                            btn = $(btn);
-
-                            if (btn.attr('data-action') === 'agree') {
-                                btn.addClass(self.settings.classes.active);
-                            }
-                        });
-                    }
-                });
-            }
-
-            // Button disagree
-            if (self.elements.btnDisagree !== undefined && self.elements.btnDisagree.length) {
-                self.elements.btnDisagree.one('click.cookienotice.btnDisagree', function () {
-                    self.disagree();
-                    self.notice('hide');
-
-                    if (self.settings.reload) {
-                        self.reload();
-
-                    } else if (self.elements.serviceAction.length) {
-                        self.elements.serviceAction.each(function (i, btn) {
-                            btn = $(btn);
-
-                            if (btn.attr('data-action') === 'disagree') {
-                                btn.addClass(self.settings.classes.active);
-                            }
-                        });
-                    }
-                });
-            }
-
-            // Bouton "customize"
-            if (self.elements.btnCustomize !== undefined && self.elements.btnCustomize.length) {
-                self.elements.btnCustomize.on('click.cookienotice.btnCustomize keyup.cookienotice.btnCustomize', function (event) {
-                    if (event.type === 'click' || event.type === 'keyup' && (event.key === 'Enter' || event.key === ' ')) {
+                    self.triggerTimeout = setTimeout(function () {
                         event.preventDefault();
-                        self.modal('show');
                         self.elements.openBtn = $(event.currentTarget);
+                        self.elements.body.addClass(self.settings.classes.modalOpen);
+
+                        setTimeout(function () {
+                            self.elements.modalWrapper.focus();
+                        }, 100);
 
                         if (!self.getCookie(self.cookieName)) {
                             self.notice('hide');
                         }
-                    }
-                });
-            }
 
-            // Modal
-            if (self.config.modal !== undefined) {
-                closeModal = function (event) {
-                    if (event.type === 'click' || (event.type === 'keydown' && event.key === 'Escape')) {
-                        // Focus
-                        if (!self.settings.reload && self.elements.openBtn !== undefined && self.elements.openBtn.length) {
-                            event.preventDefault();
-                            setTimeout(function () {
-                                self.elements.openBtn.focus();
-                            }, 100);
+                        // Btn close
+                        if (self.elements.modalClose.length) {
+                            self.elements.modalClose.on({
+                                'click.cookienotice.modalClose': function (event) {
+                                    self.modal(event, 'hide');
+                                },
+                                // Go to last service
+                                'keydown.cookienotice.modalClose': function (event) {
+                                    if (event.key === 'Tab' && event.shiftKey) {
+                                        event.preventDefault();
+                                        self.elements.servicesWrapper.find('.is-last .' + self.settings.classes.prefix + '-service-action-input').focus();
+                                    }
+                                }
+                            });
                         }
 
-                        self.modal('hide');
-
-                        if (!self.getCookie(self.cookieName)) {
-                            self.notice('show');
+                        // Overlay
+                        if (self.elements.modalOverlay.length) {
+                            self.elements.modalOverlay.one('click.cookienotice.modalOverlay', function (event) {
+                                self.modal(event, 'hide');
+                            });
                         }
 
-                        self.reload();
-                    }
-                };
+                        // Escape
+                        $(document).on('keydown.cookienotice.modalEscape', function (event) {
+                            self.modal(event, 'hide');
+                        });
 
-                // Close
-                if (self.elements.modalClose.length) {
-                    self.elements.modalClose.on({
-                        'click.cookienotice.modalClose': closeModal,
-                        'keydown.cookienotice.modalClose': function (event) {
-                            if (event.key === 'Tab' && event.shiftKey) {
+                        // Services state action
+                        self.elements.serviceAction.on('click.cookienotice.serviceAction keydown.cookienotice.serviceAction', function (event) {
+                            let btn = $(event.currentTarget);
+                            let serviceElement = btn.closest('.' + self.settings.classes.prefix + '-service');
+                            if (event.key === ' ') {
                                 event.preventDefault();
-                                self.elements.servicesWrapper.find('.is-last .' + self.settings.classes.prefix + '-service-action-input').focus();
+                            }
+
+                            if (event.type === 'click' || event.type === 'keydown' && (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
+                                let input = btn.find('input');
+                                let state = input.prop('checked');
+                                let service = serviceElement.attr('data-service');
+
+                                if (service !== undefined) {
+                                    self.setState(service, !state);
+                                }
+                            }
+
+                            // Repeat tabindex
+                            if (event.type === 'keydown' && event.key === 'Tab' && !event.shiftKey && serviceElement.hasClass('is-last')) {
+                                event.preventDefault();
+                                self.elements.modalClose.focus();
+                            }
+                        });
+                    }, 100);
+                }
+
+                // HIDE
+                else if (action === 'hide' && (event.type === 'click' || (event.type === 'keydown' && event.key === 'Escape'))) {
+                    self.elements.body.removeClass(self.settings.classes.modalOpen);
+
+                    // Stop events
+                    self.elements.modalClose.off('click.cookienotice.modalClose keydown.cookienotice.modalClose');
+                    self.elements.modalOverlay.off('click.cookienotice.modalOverlay');
+                    $(document).off('keydown.cookienotice.modalEscape');
+                    self.elements.serviceAction.off('click.cookienotice.serviceAction keydown.cookienotice.serviceAction');
+
+                    // Focus
+                    if (!self.settings.reload && self.elements.openBtn !== undefined && self.elements.openBtn.length) {
+                        event.preventDefault();
+                        setTimeout(function () {
+                            self.elements.openBtn.focus();
+                        }, 100);
+                    }
+
+                    if (!self.getCookie(self.cookieName)) {
+                        self.notice('show');
+                    }
+
+                    self.reload();
+                }
+            }
+        },
+
+        /**
+         * Build the service handler
+         */
+        wrapServiceHandler: function () {
+            let self = this;
+
+            if (self.config.services.all['allow'] !== undefined && self.config.services.all['allow'] !== '') {
+                self.elements.serviceHandlers = self.elements.body.find('[data-cookienotice]');
+
+                if (self.elements.serviceHandlers.length) {
+                    self.elements.serviceHandlers.each(function (index, handler) {
+                        handler = $(handler);
+
+                        if (!handler.hasClass(self.settings.classes.serviceHandler + '-container')) {
+                            let service = handler.attr('data-cookienotice-service');
+
+                            if (service !== undefined && self.config.services[service] !== undefined) {
+                                let state = self.getState(service);
+                                let serviceConfig = self.config.services[service];
+
+                                handler.addClass(self.settings.classes.serviceHandler + '-container' + ' ' + (!state || state === 'undefined' ? self.settings.classes.serviceDisagreed : self.settings.classes.serviceAgreed));
+
+                                // Content
+                                let wrapper = $('<div>', {
+                                    'class': self.settings.classes.serviceHandler,
+                                    'aria-hidden': !(!state || state === 'undefined')
+                                });
+
+                                if (self.config.services.all.disabled !== undefined) {
+                                    $('<p>', {
+                                        'class': self.settings.classes.serviceHandler + '-label',
+                                        html: self.config.services.all.disabled.replace('{service}', serviceConfig.label)
+                                    }).appendTo(wrapper);
+                                }
+                                let btnHandler = $('<button>', {
+                                    'class': self.settings.classes.serviceHandler + '-btn ' + self.settings.classes.prefix + '-btn ' + self.settings.classes.prefix + '-btn--secondary ',
+                                    html: self.config.services.all['allow'].replace('{service}', serviceConfig.label)
+                                }).appendTo(wrapper);
+
+                                wrapper.appendTo(handler);
+
+                                // Event
+                                btnHandler.on('click', function () {
+                                    self.agree(service);
+                                });
+
+                                // User callback
+                                if (self.settings.afterWrapServiceHandler !== undefined) {
+                                    self.settings.afterWrapServiceHandler.call({
+                                        cookieNotice: self,
+                                        elements: self.elements,
+                                        handler: handler,
+                                        service: service
+                                    });
+                                }
                             }
                         }
                     });
                 }
+            }
+        },
 
-                // Overlay
-                if (self.elements.modalOverlay.length) {
-                    self.elements.modalOverlay.on('click.cookienotice.modalOverlay', closeModal);
-                }
+        /**
+         * Events handler
+         */
+        eventsHandler: function () {
+            let self = this;
 
-                // Escape
-                $(document).on('keydown.cookienotice.modalEscape', closeModal);
+            // Notice description
+            if (self.settings.summary !== false && self.elements.noticeDescription.length && self.config.notice.summary !== undefined && self.config.notice.summary !== '' && $(window).width() <= self.settings.summary) {
+                self.elements.noticeDescription.html(self.formatDescription(self.config.notice.summary));
 
-                // States
-                self.elements.serviceAction = self.elements.servicesWrapper.find('.' + self.settings.classes.prefix + '-service-action');
-                self.elements.serviceAction.on('click.cookienotice.serviceAction keydown.cookienotice.serviceAction', function (event) {
-                    var btn = $(event.currentTarget);
-                    var serviceElement = btn.closest('.' + self.settings.classes.prefix + '-service');
-                    if (event.key === ' ') {
-                        event.preventDefault();
+                self.elements.noticeDescription.on('click', function (event) {
+                    if (!$(event.target).is('a') && self.elements.noticeDescription.html() !== self.config.notice.description) {
+                        self.elements.noticeDescription.html(self.formatDescription(self.config.notice.description));
                     }
+                });
+            }
 
-                    if (event.type === 'click' || event.type === 'keydown' && (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
-                        var input = btn.find('input');
-                        var state = input.prop('checked');
-                        var label = btn.find('label');
-                        var service = serviceElement.attr('data-service');
+            // Button Agree
+            if (self.elements.btnAgree !== undefined && self.elements.btnAgree.length) {
+                self.elements.btnAgree.one('click.cookienotice.btnAgree', function () {
+                    self.agree();
+                    self.notice('hide');
+                    self.reload();
+                });
+            }
 
-                        if (service !== undefined) {
-                            // Btn state
-                            btn[(state ? 'remove' : 'add') + 'Class'](self.settings.classes.active);
-                            btn[(state ? 'add' : 'remove') + 'Class'](self.settings.classes.inactive);
-                            input.prop('checked', !state);
-                            label.html(self.config.services.all[state ? 'disagree' : 'agree']);
+            // Button Disagree
+            if (self.elements.btnDisagree !== undefined && self.elements.btnDisagree.length) {
+                self.elements.btnDisagree.one('click.cookienotice.btnDisagree', function () {
+                    self.disagree();
+                    self.notice('hide');
+                    self.reload();
+                });
+            }
 
-                            // All
-                            if (service === 'all') {
-                                self.elements.serviceAction.each(function (i, item) {
-                                    item = $(item);
-                                    item[(state ? 'remove' : 'add') + 'Class'](self.settings.classes.active);
-                                    item[(state ? 'add' : 'remove') + 'Class'](self.settings.classes.inactive);
-                                    item.find('input').prop('checked', !state);
-                                    item.find('label').html(self.config.services.all[state ? 'disagree' : 'agree']);
-                                });
-                            } else {
-                                var allItem = self.elements.serviceAllWrapper.find('.' + self.settings.classes.prefix + '-service-action');
-                                allItem.removeClass(self.settings.classes.active);
-                                allItem.removeClass(self.settings.classes.inactive);
-                                allItem.find('input').prop('checked', false);
-                                allItem.find('label').html(self.config.services.all.customize);
-                            }
-
-                            // Service state
-                            self.setState(service, !state);
-                        }
-                    }
-
-                    // Repeat tabindex
-                    if (event.type === 'keydown' && event.key === 'Tab' && !event.shiftKey && serviceElement.hasClass('is-last')) {
-                        event.preventDefault();
-                        self.elements.modalClose.focus();
-                    }
+            // Button Customize
+            if (self.elements.btnCustomize !== undefined && self.elements.btnCustomize.length) {
+                self.elements.btnCustomize.on('click.cookienotice.btnCustomize keyup.cookienotice.btnCustomize', function (event) {
+                    self.modal(event, 'show');
                 });
             }
 
@@ -650,7 +714,7 @@
         },
 
         /**
-         * Accepte un service
+         * Agree a service
          *
          * @param {string=undefined} service
          */
@@ -661,7 +725,7 @@
         },
 
         /**
-         * Refuse un service
+         * Disagree a service
          *
          * @param {string=undefined} service
          */
@@ -672,15 +736,17 @@
         },
 
         /**
-         * Définition de l'état du service
+         * Set the state of service
          *
          * @param {string} service
-         * @param {boolean} state
+         * @param {boolean|string} state true/false or 'undefined'
          */
         setState: function (service, state) {
-            // Variables globales
-            if (service === 'all' && this.config.services !== undefined) {
-                $.each(this.config.services, function (configService) {
+            let self = this;
+
+            // Gloal variables
+            if (service === 'all' && self.config.services !== undefined) {
+                $.each(self.config.services, function (configService) {
                     if (configService !== 'all') {
                         $.CookieNotice.services[configService] = state;
                     }
@@ -690,13 +756,69 @@
             }
 
             if (state !== 'undefined') {
-                // Cookie
-                this.setCookie(this.cookieName, JSON.stringify($.CookieNotice.services), this.settings.cookieDuration);
+                // Service action (all)
+                self.elements.serviceAllWrapper.each(function (index, serviceAll) {
+                    let allItem = $(serviceAll).find('.' + self.settings.classes.prefix + '-service-action');
+
+                    if (allItem.length) {
+                        allItem.removeClass(self.settings.classes.serviceAgreed);
+                        allItem.removeClass(self.settings.classes.serviceDisagreed);
+                        allItem.find('input').prop('checked', false);
+                        allItem.find('label').html(self.config.services.all.customize);
+                    }
+                });
+
+                // Service action (modal)
+                if (self.elements.serviceAction.length) {
+                    self.elements.serviceAction.each(function (index, btn) {
+                        btn = $(btn);
+                        let btnServiceElement = btn.closest('.' + self.settings.classes.prefix + '-service');
+                        let btnService = btnServiceElement.attr('data-service');
+
+                        if (btnService === service || service === 'all') {
+                            let btnInput = btn.find('input');
+                            let btnLabel = btn.find('label');
+
+                            // Btn state
+                            btn[(state ? 'add' : 'remove') + 'Class'](self.settings.classes.serviceAgreed);
+                            btn[(state ? 'remove' : 'add') + 'Class'](self.settings.classes.serviceDisagreed);
+                            btnInput.prop('checked', state);
+                            btnLabel.html(self.config.services.all[state ? 'agree' : 'disagree']);
+                        }
+                    });
+                }
+
+                // Service handler
+                let targets = self.elements.body.find('[data-cookienotice]');
+                if (targets.length) {
+                    targets.each(function (index, target) {
+                        target = $(target);
+                        let targetService = target.attr('data-cookienotice-service');
+
+                        if (targetService === service || service === 'all') {
+                            let serviceHandler = target.find('.' + self.settings.classes.serviceHandler);
+
+                            target.removeClass(state ? self.settings.classes.serviceDisagreed : self.settings.classes.serviceAgreed);
+                            target.addClass(state ? self.settings.classes.serviceAgreed : self.settings.classes.serviceDisagreed);
+                            serviceHandler.attr('aria-hidden', state);
+
+                            if (!state && target.is('a')) {
+                                target.on('click.cookienotice', function (event) {
+                                    event.preventDefault();
+                                });
+                            }
+                        }
+                    });
+                }
+
+                // Cookie storage
+                self.setCookie(self.cookieName, JSON.stringify($.CookieNotice.services), this.settings.cookieDuration);
 
                 // User callback
-                if (this.settings.onChangeState !== undefined) {
-                    this.settings.onChangeState.call({
-                        cookieNotice: this,
+                if (self.settings.onChangeState !== undefined) {
+                    self.settings.onChangeState.call({
+                        cookieNotice: self,
+                        elements: self.elements,
                         services: $.CookieNotice.services,
                         service: service,
                         state: state
@@ -704,16 +826,16 @@
                 }
             }
 
-            return this;
+            return self;
         },
 
         /**
-         * Chargement des états des services depuis le cookie
+         * Load services state from cookie storage
          *
-         * @return {boolean|object} False si le cookie n'existe pas ou object avec l'état de chaque service s'il existe
+         * @return {boolean|object}
          */
         loadStates: function () {
-            var states = this.getCookie(this.cookieName);
+            let states = this.getCookie(this.cookieName);
 
             if (states) {
                 states = JSON.parse(states);
@@ -729,7 +851,7 @@
         },
 
         /**
-         * Récupération de l'état du service. Si le choix n'a pas été fait, l'état retourné est "undefined"
+         * Return the state of service. If there is no choice, the returned state is "undefined"
          *
          * @param {string} service
          * @return {boolean|string}
@@ -743,7 +865,7 @@
         },
 
         /**
-         * Détermine si un service est autorisé
+         * Return true if the service is allowed
          *
          * @param {string} service
          * @return {boolean}
@@ -753,7 +875,7 @@
         },
 
         /**
-         * Détermine si il y a eu un consentement (accepté ou non)
+         * Return true if there is a saved consent
          *
          * @return {boolean}
          */
@@ -762,7 +884,7 @@
         },
 
         /**
-         * Rechargement de la page
+         * Reload current url
          */
         reload: function () {
             if (this.settings.reload) {
@@ -774,17 +896,18 @@
          * Utils
          */
         getCookie: function (name) {
-            var regex = new RegExp('(?:; )?' + name + '=([^;]*);?');
+            let regex = new RegExp('(?:; )?' + name + '=([^;]*);?');
 
             return regex.test(document.cookie) ? decodeURIComponent(RegExp['$1']) : null;
         },
-        setCookie: function (name, value, duration, path) {
-            var today = new Date();
-            var expires = new Date();
+        setCookie: function (name, value, duration, path, secure) {
+            let today = new Date();
+            let expires = new Date();
             path = path || '/';
+            secure = secure || true;
 
             expires.setTime(today.getTime() + (duration*24*60*60*1000));
-            document.cookie = name + '=' + value + ';expires=' + expires.toGMTString() + ';path=' + path + ';';
+            document.cookie = name + '=' + value + ';expires=' + expires.toGMTString() + ';path=' + path + ';' + (secure ? 'secure' : '');
         },
         removeCookie: function (name, path) {
             return this.setCookie(name, '', -1, path);
@@ -794,8 +917,14 @@
 
             console[type]('CookieNotice: ' + log);
         },
+        formatDescription: function (description) {
+            return description
+                .replace('{agree}', this.config.notice.agree)
+                .replace('{disagree}', this.config.notice.disagree)
+                .replace('{customize}', this.config.notice.customize);
+        },
         replacePrefixClass: function () {
-            var self = this;
+            let self = this;
 
             $.each(self.settings.classes, function (key, value) {
                 if (typeof value === 'string') {

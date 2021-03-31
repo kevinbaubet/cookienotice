@@ -1,34 +1,33 @@
 {
   "name": "@kevinbaubet/cookienotice",
-  "version": "3.3.1",
+  "version": "4.0.0",
   "main": "./dist/cookienotice.min.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kevinbaubet/cookienotice.git"
   },
-  "author": "Kévin Baubet <contact@kevinbaubet.fr>",
+  "author": "Kevin Baubet <contact@kevinbaubet.com>",
   "license": "MIT",
   "dependencies": {
-    "jquery": ">=3.5.0"
+    "jquery": ">=3.6.0"
   },
   "devDependencies": {
-    "autoprefixer": "^9.8.0",
-    "gulp": "^4.0.0",
-    "gulp-load-plugins": "^2.0.0",
-    "gulp-pixrem": "^1.0.0",
-    "gulp-postcss": "^8.0.0",
-    "gulp-rename": "^2.0.0",
-    "gulp-sass": "^4.1.0",
-    "gulp-uglify": "^3.0.0",
-    "postcss-pxtorem": "^5.0.0",
-    "pump": "^3.0.0"
+    "autoprefixer": "^10.0",
+    "gulp": "^4.0",
+    "gulp-load-plugins": "^2.0",
+    "postcss": "^8.0",
+    "gulp-postcss": "^9.0",
+    "gulp-rename": "^2.0",
+    "gulp-sass": "^4.0",
+    "gulp-uglify": "^3.0",
+    "postcss-pxtorem": "^6.0",
+    "pump": "^3.0"
   },
   "sass": {
     "outputStyle": "expanded"
   },
   "browserslist": [
-    "last 2 versions",
-    "IE 11"
+    "last 2 versions"
   ],
   "pxtorem": {
     "replace": true,

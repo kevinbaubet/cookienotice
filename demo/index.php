@@ -4,20 +4,20 @@ require_once '../src/CookieNotice/Service.php';
 
 /*
 
-// Tester
+// Test
 
-if (\CookieNotice\Service::isAllowed('facebook'))) {
+if (\CookieNotice\Service::isAllowed('facebook')) {
     // OK
 }
 
-// ou
+// or
 
 $state = \CookieNotice\Service::getState('facebook');
 if ($state === true) {
     // OK
 }
 
-// Consentement enregistré ?
+// Saved consent?
 if (\CookieNotice\Service::hasConsent()) {
     // OK
 }
@@ -35,22 +35,26 @@ if (\CookieNotice\Service::hasConsent()) {
 
         <link rel="stylesheet" href="../dist/cookienotice.css" />
 
-        <script src="https://unpkg.com/jquery@3.5.1/dist/jquery.js"></script>
+        <script src="https://unpkg.com/jquery@3.6.0/dist/jquery.js"></script>
 
         <script src="../src/cookienotice.js"></script>
         <script>
             jQuery(document).ready(function ($) {
-                var cookieNotice = $('#notice-cookie').cookieNotice();
+                let cookieNotice = $('#notice-cookie').cookieNotice({
+                    onChangeState: function () {
+                        console.log(this);
+                    }
+                });
 
-                // Tester
+                // Test
                 // console.log(cookieNotice.isAllowed('facebook'));
-                // ou
-                // var state = cookieNotice.getState('facebook');
+                // or
+                // let state = cookieNotice.getState('facebook');
                 // console.log((state === true));
-                // ou
+                // or
                 // console.log(($.CookieNotice.services['facebook'] === true));
 
-                // Consentement enregistré ?
+                // Saved consent?
                 // console.log(cookieNotice.hasConsent());
             });
         </script>
@@ -59,27 +63,52 @@ if (\CookieNotice\Service::hasConsent()) {
         <div class="page">
             <h1>Cookie Notice</h1>
 
-            <h2>Ce que fait Cookie Notice (<a href="https://www.cnil.fr/fr/exemple-de-bandeau-cookie" target="_blank">Rappel des obligations légales</a>)</h2>
+            <h2>Featuring</h2>
             <p>
-                <b>1ère étape :</b> une notice s'affiche pour informer l'utilisation des cookies pour une liste de services.<br />
+                <b>First step:</b> a notice is displayed to inform the user of cookies for a listing of services. The choice is mandatory to continue the navigation.<br />
                 <br />
-                <b>2ème étape :</b> un choix est fait si l'utilisateur :<br />
-                - clique sur le bouton de la notice "je choisis", pour choisir précisément les services déposant des cookies<br />
-                - clique sur le bouton de la notice "j'accepte", ce qui vaut pour acceptation de tous les cookies<br />
-                - clique sur le bouton de la notice "je refuse", ce qui interdit l'installation de tous les cookies<br />
+                <b>Second step:</b> a choice is made if the user:<br />
+                - clicks on the notice button "I accept", which will accept all cookies<br />
+                - clicks on the notice button "I deny", which will deny all cookies<br />
+                - clicks on the notice button "I customize", to customize the services one by one<br />
+                - clicks on the service button "Allow" after deny all services, which will accept only the wanted service<br />
                 <br />
-                <b>3ème étape :</b> dépôt d'un cookie pour enregistrer le consentement de l'utilisateur :<br />
-                - pendant une durée maximum de 13 mois<br />
-                - possiblité de changer d'avis en retournant sur la personnalisation des services<br />
-                <br />
+                <b>Third step:</b> the deposit of one cookie to save user consent:<br />
+                - for a maximum duration of 13 months<br />
+                - there is a possibility of changing to return to customized services<br />
             </p>
+            <p>&nbsp;</p>
 
-            <h2>Changer d'avis</h2>
+            <h2>Change your mind</h2>
             <p>
-                <a href="#" class="cookienotice-customize">Gestion des cookies</a>
+                <a href="#" class="cookienotice-customize">Customize the cookies</a>
             </p>
+            <p>&nbsp;</p>
+
+            <h2>Allow a service during navigation</h2>
+
+            <div class="services">
+                <a data-cookienotice data-cookienotice-service="youtube" class="service" href="#">
+                    <span>Youtube 1</span>
+                </a>
+                <a data-cookienotice data-cookienotice-service="youtube" class="service" href="#">
+                    <span>Youtube 2</span>
+                </a>
+                <a data-cookienotice data-cookienotice-service="vimeo" class="service" href="#">
+                    <span>Vimeo</span>
+                </a>
+                <a data-cookienotice data-cookienotice-service="googlemaps" class="service" href="#">
+                    <span>Google Maps</span>
+                </a>
+                <a data-cookienotice data-cookienotice-service="recaptcha" class="service" href="#">
+                    <span>reCAPTCHA</span>
+                </a>
+                <a data-cookienotice data-cookienotice-service="twitter" class="service" href="#">
+                    <span>Twitter</span>
+                </a>
+            </div>
         </div>
 
-        <div id="notice-cookie" data-config="<?php echo \CookieNotice\Config::get(); ?>"></div>
+        <div id="notice-cookie" data-config="<?php echo htmlspecialchars(\CookieNotice\Config::get()); ?>"></div>
     </body>
 </html>

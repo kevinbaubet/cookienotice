@@ -10,25 +10,27 @@ namespace CookieNotice;
 abstract class Service {
 
     /**
-     * Détermine si un service est autorisé par l'utilisateur
+     * Return true if the service is allowed
      *
      * @param $service
+     * @return boolean
      */
-    public static function isAllowed($service) {
+    public static function isAllowed($service): bool {
         return self::getState($service) === true;
     }
 
     /**
-     * Retourne l'état du service. Si le choix n'a pas été fait, l'état retourné est "undefined"
+     * Return the state of service. If there is no choice, the returned state is "undefined"
      *
      * @param $service
+     * @return boolean|string
      */
     public static function getState($service) {
         if (self::hasConsent()) {
-            $services = json_decode($_COOKIE['cookienotice']);
+            $services = json_decode($_COOKIE['cookienotice'], true);
 
-            if (isset($services->{$service})) {
-                return $services->{$service};
+            if (isset($services[$service])) {
+                return $services[$service];
             }
         }
 
@@ -36,11 +38,11 @@ abstract class Service {
     }
 
     /**
-     * Détermine si il y a eu un consentement (accepté ou non)
+     * Return true if there is a saved consent
      *
      * @return boolean
      */
-    public static function hasConsent() {
+    public static function hasConsent(): bool {
         return isset($_COOKIE['cookienotice']);
     }
 
