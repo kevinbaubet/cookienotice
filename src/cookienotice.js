@@ -44,9 +44,7 @@
             serviceDisagreed: 'is-disagreed',
             btnAgree: '{prefix}-agree',
             btnDisagree: '{prefix}-disagree',
-            btnCustomize: '{prefix}-customize',
-            active: 'is-active',
-            inactive: 'is-inactive'
+            btnCustomize: '{prefix}-customize'
         },
         reload: false,
         summary: 767,
@@ -640,18 +638,21 @@
                                 wrapper.appendTo(handler);
 
                                 // Event
+                                let userEvent = {
+                                    cookieNotice: self,
+                                    elements: self.elements,
+                                    handler: handler,
+                                    service: service
+                                };
+
                                 btnHandler.on('click', function () {
                                     self.agree(service);
+                                    handler.trigger('agree.cookienotice', [userEvent]);
                                 });
 
                                 // User callback
                                 if (self.settings.afterWrapServiceHandler !== undefined) {
-                                    self.settings.afterWrapServiceHandler.call({
-                                        cookieNotice: self,
-                                        elements: self.elements,
-                                        handler: handler,
-                                        service: service
-                                    });
+                                    self.settings.afterWrapServiceHandler.call(userEvent);
                                 }
                             }
                         }
@@ -815,14 +816,16 @@
                 self.setCookie(self.cookieName, JSON.stringify($.CookieNotice.services), this.settings.cookieDuration);
 
                 // User callback
+                let userEvent = {
+                    cookieNotice: self,
+                    elements: self.elements,
+                    services: $.CookieNotice.services,
+                    service: service,
+                    state: state
+                };
+                self.elements.container.trigger('changestate.cookienotice', [userEvent]);
                 if (self.settings.onChangeState !== undefined) {
-                    self.settings.onChangeState.call({
-                        cookieNotice: self,
-                        elements: self.elements,
-                        services: $.CookieNotice.services,
-                        service: service,
-                        state: state
-                    });
+                    self.settings.onChangeState.call(userEvent);
                 }
             }
 

@@ -42,8 +42,16 @@ if (\CookieNotice\Service::hasConsent()) {
             jQuery(document).ready(function ($) {
                 let cookieNotice = $('#notice-cookie').cookieNotice({
                     onChangeState: function () {
-                        console.log(this);
+                        //console.log(this);
                     }
+                });
+
+                $('[data-cookienotice-service="youtube"]').on('agree.cookienotice', function (event, data) {
+                    console.log(data);
+                });
+
+                $('#notice-cookie').on('changestate.cookienotice', function (event, data) {
+                    console.log(data);
                 });
 
                 // Test

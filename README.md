@@ -74,8 +74,8 @@ ___services___: Services list associated to groups
       
 ### Methods
 
-* namespace : **CookieNotice**
-* classe    : **Service**
+* namespace: **CookieNotice**
+* class: **Service**
         
 | Method             | Arguments                                                        | Description                                                                           |
 |--------------------|------------------------------------------------------------------|---------------------------------------------------------------------------------------|
@@ -123,8 +123,6 @@ I recommend to test in JS side to exempt cache issues
 | &nbsp;&nbsp;&nbsp;&nbsp;btnAgree         | string   | '{prefix}-agree'           | Class for agree button                                             |
 | &nbsp;&nbsp;&nbsp;&nbsp;btnDisagree      | string   | '{prefix}-disagree'        | Class for disagree button                                          |
 | &nbsp;&nbsp;&nbsp;&nbsp;btnCustomize     | string   | '{prefix}-customize'       | Class for customize button                                         |
-| &nbsp;&nbsp;&nbsp;&nbsp;active           | string   | 'is-active'                | Class pour l'état actif d'un service                               |
-| &nbsp;&nbsp;&nbsp;&nbsp;inactive         | string   | 'is-inactive'              | Class pour l'état inactif d'un service                             |
 | reload                                   | boolean  | false                      | Enable reloading current url after a change of service state       |
 | summary                                  | int/bool | 767                        | Max witdh in pixel to show the summary of notice. False to disable |
 | cookieDuration                           | integer  | 13*30                      | Consent storage duration                                           |
@@ -155,12 +153,41 @@ I recommend to test in JS side to exempt cache issues
 | removeCookie       | **name** *string* Cookie name, **path** *string* Storage path                                                                                                              | Remove a cookie                                                                       |
 | destroy            | -                                                                                                                                                                          | Remove CookieNotice from DOM                                                          |
 
+### Events
+
+#### changestate.cookienotice
+
+On change state
+To register on *CookieNotice container*
+
+    $('#notice-cookie').cookieNotice();
+    
+    $('#notice-cookie').on('changestate.cookienotice', function (event, data) {
+        console.log(data);
+    });
+    
+#### agree.cookienotice
+
+On agree service in service handler
+To register on *service handler*
+
+    $('#notice-cookie').cookieNotice();
+    
+    $('[data-cookienotice-service="youtube"]').on('agree.cookienotice', function (event, data) {
+        console.log(data);
+    });
 
 ### Test allowed services
 
     let cookieNotice = $('#notice-cookie').cookieNotice();
     
     if (cookieNotice.isAllowed('facebook')) {
+        // OK
+    }
+    
+    // or
+    
+    if ($.CookieNotice.services['facebook'] === true) {
         // OK
     }
     
