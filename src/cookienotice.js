@@ -645,6 +645,12 @@
                                     service: service
                                 };
 
+                                if (!state && handler.is('a')) {
+                                    handler.on('click.cookienotice', function (event) {
+                                        event.preventDefault();
+                                    });
+                                }
+
                                 btnHandler.on('click', function () {
                                     self.agree(service);
                                     handler.trigger('agree.cookienotice', [userEvent]);
@@ -790,23 +796,26 @@
                 }
 
                 // Service handler
-                let targets = self.elements.body.find('[data-cookienotice]');
-                if (targets.length) {
-                    targets.each(function (index, target) {
-                        target = $(target);
-                        let targetService = target.attr('data-cookienotice-service');
+                if (self.elements.serviceHandlers.length) {
+                    self.elements.serviceHandlers.each(function (index, handler) {
+                        handler = $(handler);
+                        let handlerService = handler.attr('data-cookienotice-service');
 
-                        if (targetService === service || service === 'all') {
-                            let serviceHandler = target.find('.' + self.settings.classes.serviceHandler);
+                        if (handlerService === service || service === 'all') {
+                            let serviceHandler = handler.find('.' + self.settings.classes.serviceHandler);
 
-                            target.removeClass(state ? self.settings.classes.serviceDisagreed : self.settings.classes.serviceAgreed);
-                            target.addClass(state ? self.settings.classes.serviceAgreed : self.settings.classes.serviceDisagreed);
+                            handler.removeClass(state ? self.settings.classes.serviceDisagreed : self.settings.classes.serviceAgreed);
+                            handler.addClass(state ? self.settings.classes.serviceAgreed : self.settings.classes.serviceDisagreed);
                             serviceHandler.attr('aria-hidden', state);
 
-                            if (!state && target.is('a')) {
-                                target.on('click.cookienotice', function (event) {
-                                    event.preventDefault();
-                                });
+                            if (handler.is('a')) {
+                                if (!state) {
+                                    handler.on('click.cookienotice', function (event) {
+                                        event.preventDefault();
+                                    });
+                                } else {
+                                    handler.off('click.cookienotice');
+                                }
                             }
                         }
                     });
