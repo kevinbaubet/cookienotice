@@ -907,10 +907,10 @@
             let today = new Date();
             let expires = new Date();
             path = path || '/';
-            secure = secure || true;
+            secure = secure || (window.location.protocol === 'https:');
 
             expires.setTime(today.getTime() + (duration*24*60*60*1000));
-            document.cookie = name + '=' + value + ';expires=' + expires.toGMTString() + ';path=' + path + ';' + (secure ? 'secure' : '');
+            document.cookie = name + '=' + value + ';expires=' + expires.toGMTString() + ';path=' + path + ';' + (secure === true ? 'secure' : '');
         },
         removeCookie: function (name, path) {
             return this.setCookie(name, '', -1, path);
