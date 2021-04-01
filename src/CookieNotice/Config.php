@@ -27,16 +27,16 @@ abstract class Config {
              */
             'notice' => [
                 'description' => '
-                    <h2 class="cookienotice-modal-label">Nous respectons votre vie privée</h2>
-                    <p>Nous utilisons des données non sensibles comme des cookies pour assurer le fonctionnement optimal du site et réaliser des statistiques d’audience. Cliquez sur le bouton "{agree}" pour donner votre consentement à ces opérations et profiter d’une expérience personnalisée. Cliquez sur "{disagree}" pour les refuser ou modifiez vos préférences en cliquant sur "{customize}".</p>
+                    <h2 class="cookienotice-modal-label">We respect your privacy</h2>
+                    <p>We use non-sensitive data such as cookies to ensure the optimal functioning of the site and to compile audience statistics. Click on the "{agree}" button to give your consent to these operations and enjoy a personalized experience. Click on "{disagree}" to refuse them or modify your preferences by clicking on "{customize}".</p>
                 ',
                 'summary' => '
-                    <h2 class="cookienotice-modal-label">Nous respectons votre vie privée</h2>
-                    <p>Nous utilisons des données non sensibles comme des cookies pour assurer le fonctionnement optimal du site et réaliser des statistiques d’audience... (voir plus)</p>
+                    <h2 class="cookienotice-modal-label">We respect your privacy</h2>
+                    <p>We use non-sensitive data such as cookies to ensure the optimal functioning of the site and to carry out audience statistics ... (see more)</p>
                 ',
-                'agree' => 'Tout accepter',
-                'disagree' => 'Continuer sans accepter',
-                'customize' => 'Paramétrer les cookies'
+                'agree' => 'Accept all',
+                'disagree' => 'Continue without accepting',
+                'customize' => 'Configure cookies'
             ],
 
             /**
@@ -49,10 +49,10 @@ abstract class Config {
              */
             //
             'modal' => [
-                'label' => 'Centre de préférences de la confidentialité',
+                'label' => 'Privacy preference center',
                 'labelTag' => 'h2',
-                'description' => '<p>Lorsque vous consultez un site Web, des données peuvent être stockées dans votre navigateur sous la forme de cookies. Ces informations peuvent porter sur vous, sur vos préférences ou sur votre appareil et sont utilisées pour s\'assurer que le site Web fonctionne correctement. Les informations ne permettent pas de vous identifier directement, mais de vous faire bénéficier d\'une expérience personnalisée. Parce que nous respectons votre droit à la vie privée, nous vous donnons la possibilité gérer les cookies.</p>',
-                'close' => 'Fermer'
+                'description' => '<p>When you visit a website, data may be stored in your browser in the form of cookies. This information may relate to you, your preferences or your device and is used to ensure that the website is functioning properly. The information does not identify you directly, but gives you a personalized experience. Because we respect your right to privacy, we give you the possibility to manage cookies.</p>',
+                'close' => 'Close'
             ],
 
             /**
@@ -91,12 +91,12 @@ abstract class Config {
                  * - position  Position of the line "all services": before, after or both
                  */
                 'all' => [
-                    'label' => 'Préférences pour tous les services',
-                    'customize' => 'Je choisis',
-                    'agree' => 'Accepter le service',
-                    'disagree' => 'Refuser le service',
-                    'disabled' => 'Le service {service} est désactivé.',
-                    'allow' => 'Autoriser {service}',
+                    'label' => 'Preferences for all services',
+                    'customize' => 'I choose',
+                    'agree' => 'Accept the service',
+                    'disagree' => 'Decline the service',
+                    'disabled' => 'The service {service} is disabled.',
+                    'allow' => 'Authorize {service}',
                     'position' => 'both'
                 ],
 

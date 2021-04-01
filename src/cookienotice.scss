@@ -60,7 +60,6 @@
     }
 }
 
-
 .cookienotice-notice-actions {
     display: flex;
     flex-direction: row-reverse;
@@ -388,15 +387,12 @@ a.cookienotice-service-label:focus {
     }
 }
 .cookienotice-service-all-label {
+    margin-bottom: 0;
     color: $notice-cookie-modal--color-primary;
     font-size: 1.2em;
     font-weight: bold;
     text-transform: uppercase;
 }
-p.cookienotice-service-all-label {
-    margin-bottom: 0;
-}
-
 
 /* ==========================================================================
    Service handler
@@ -436,6 +432,9 @@ p.cookienotice-service-all-label {
         position: relative;
         z-index: 10;
     }
+}
+.cookienotice-service-handler-label {
+    color: #fff;
 }
 .cookienotice-service-handler-btn {
     cursor: pointer;

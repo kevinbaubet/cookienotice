@@ -447,14 +447,11 @@ a.cookienotice-service-label:focus {
 }
 
 .cookienotice-service-all-label {
+  margin-bottom: 0;
   color: #868395;
   font-size: 1.2em;
   font-weight: bold;
   text-transform: uppercase;
-}
-
-p.cookienotice-service-all-label {
-  margin-bottom: 0;
 }
 
 /* ==========================================================================
@@ -505,6 +502,10 @@ p.cookienotice-service-all-label {
 .cookienotice-service-handler > * {
   position: relative;
   z-index: 10;
+}
+
+.cookienotice-service-handler-label {
+  color: #fff;
 }
 
 .cookienotice-service-handler-btn {

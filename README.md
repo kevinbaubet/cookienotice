@@ -1,6 +1,6 @@
 # Documentation CookieNotice
 
-* Dependency: jQuery, PHP (to generate json config, but you can use other way to build json configuration data)
+* Dependency: jQuery, PHP (to generate json config, but you can use an other way to build json configuration data)
 
 
 ## Featuring
@@ -21,7 +21,6 @@
 ## Initialisation
 
     <?php require_once '../src/CookieNotice/Config.php'; // To configure ?>
-    <?php require_once '../src/CookieNotice/Service.php'; // Optional ?>
     
     <div id="notice-cookie" data-config="<?php echo htmlspecialchars(\CookieNotice\Config::get()); ?>"></div>
     
