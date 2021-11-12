@@ -308,7 +308,7 @@
                     'class': self.settings.classes.prefix + '-services'
                 });
 
-                let serviceLabelTag = self.config.modal.labelTag || 'p';
+                let serviceLabelTag = self.config.modal.labelTag || 'p';
                 if (serviceLabelTag.indexOf('h') !== -1) {
                     let serviceLabelTagLevel = parseInt(serviceLabelTag.substring(1));
                     serviceLabelTagLevel++;
@@ -647,6 +647,7 @@
 
                                 if (!state && handler.is('a')) {
                                     handler.on('click.cookienotice', function (event) {
+                                        event.stopImmediatePropagation();
                                         event.preventDefault();
                                     });
                                 }
@@ -811,6 +812,7 @@
                             if (handler.is('a')) {
                                 if (!state) {
                                     handler.on('click.cookienotice', function (event) {
+                                        event.stopImmediatePropagation();
                                         event.preventDefault();
                                     });
                                 } else {
