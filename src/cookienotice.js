@@ -23,6 +23,9 @@
         this.config = this.elements.container.attr('data-config');
         this.cookieName = 'cookienotice';
         this.triggerTimeout = undefined;
+        this.states = {
+            buttonAll: 0
+        };
 
         // Init
         if (this.prepareOptions()) {
@@ -330,7 +333,15 @@
                     self.wrapServiceActions('all').appendTo(self.elements.serviceAllWrapper);
 
                     if (self.config.services.all.position === 'before' || self.config.services.all.position === 'both') {
-                        self.elements.serviceAllWrapper.appendTo(self.elements.servicesWrapper);
+                        let cloneAllWrapper = self.elements.serviceAllWrapper.clone();
+                        let prevState = self.states.buttonAll;
+                        let cloneAllInput = cloneAllWrapper.find('input');
+                        let prevId = cloneAllInput.attr('id');
+                        self.states.buttonAll++;
+                        let newId = prevId.replace('-' + prevState, '-' + self.states.buttonAll);
+                        cloneAllWrapper.find('label').attr('for', newId);
+                        cloneAllInput.attr('id', newId);
+                        cloneAllWrapper.appendTo(self.elements.servicesWrapper);
                     }
                 }
 
@@ -459,20 +470,24 @@
                 let serviceActionWrapper = $('<span>', {
                     'class': self.settings.classes.prefix + '-service-action ' + (state === 'undefined' ? '' : (state ? self.settings.classes.serviceAgreed : self.settings.classes.serviceDisagreed))
                 });
+                let id = self.settings.classes.prefix + '-service-action--' + service;
+                if (service === 'all' && self.config.services.all.position === 'both') {
+                    id += '-' + self.states.buttonAll;
+                }
                 $('<span>', {
                     'class': self.settings.classes.prefix + '-service-action-input',
                     tabindex: self.settings.tabindexStart,
                     html: $('<input>', {
                         type: 'checkbox',
                         'class': self.settings.classes.prefix + '-service-action-input--checkbox',
-                        id: self.settings.classes.prefix + '-service-action--' + service,
+                        id: id,
                         name: service,
                         value: state,
                         checked: state === true
                     })
                 }).appendTo(serviceActionWrapper);
                 $('<label>', {
-                    for: self.settings.classes.prefix + '-service-action--' + service,
+                    for: id,
                     'class': self.settings.classes.prefix + '-service-action-label',
                     html: state === 'undefined' ? self.config.services.all.customize : self.config.services.all[!state ? 'disagree' : 'agree'],
                     'aria-hidden': true
