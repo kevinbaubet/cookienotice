@@ -28,6 +28,17 @@
     
     <a href="#" class="cookienotice-customize">Customize the cookies</a>
 
+## Service handler
+
+You could allow each service during the navigation.
+An overlay "service handler" will be added to the container for allowing the service.
+
+### Initialisation
+
+    <a data-cookienotice data-cookienotice-service="youtube" href="#">
+        My video service contents
+    </a>
+    
 
 ## PHP side
 

@@ -342,6 +342,10 @@
                         cloneAllWrapper.find('label').attr('for', newId);
                         cloneAllInput.attr('id', newId);
                         cloneAllWrapper.appendTo(self.elements.servicesWrapper);
+
+                        setTimeout(function () {
+                            self.elements.serviceAllWrapper = self.elements.servicesWrapper.find('.' + self.settings.classes.prefix + '-service.' + self.settings.classes.prefix + '-service--all');
+                        }, 50);
                     }
                 }
 
