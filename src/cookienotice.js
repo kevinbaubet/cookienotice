@@ -899,7 +899,7 @@
         },
 
         /**
-         * Return service's state. If there isn't choice, the state will be "undefined"
+         * Return service state. If there isn't choice, the state will be "undefined"
          *
          * @param {string} service
          * @return {boolean|string}
