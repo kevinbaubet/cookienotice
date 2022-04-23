@@ -35,6 +35,11 @@
         return this;
     };
 
+    /**
+     * Default options
+     *
+     * @type {{summary: number, reload: boolean, afterWrapServiceHandler: undefined, classes: {noticeOpen: string, btnDisagree: string, modalOpen: string, serviceDisagreed: string, prefix: string, btnCustomize: string, serviceAgreed: string, modal: string, notice: string, serviceHandler: string, btnAgree: string}, cookieDuration: number, afterWrapModal: undefined, onChangeState: undefined, afterWrapNotice: undefined, afterEventsHandler: undefined, tabindexStart: number}}
+     */
     $.CookieNotice.defaults = {
         classes: {
             prefix: 'cookienotice',
@@ -60,8 +65,18 @@
         onChangeState: undefined
     };
 
+    /**
+     * Services list
+     *
+     * @type {{}}
+     */
     $.CookieNotice.services = {};
 
+    /**
+     * Methods
+     *
+     * @type {{setLog: $.CookieNotice.setLog, isAllowed: (function(string): boolean), removeCookie: (function(*, *): void), wrapServiceActions: (function(string): *|jQuery|HTMLElement), getCookie: (function(*): string|null), formatDescription: (function(*): *), replacePrefixClass: (function(): $.CookieNotice), loadStates: ((function(): (boolean|Object))|*), reload: $.CookieNotice.reload, wrapNotice: (function(): $.CookieNotice), modal: $.CookieNotice.modal, notice: (function(string): $.CookieNotice), init: (function(): $.CookieNotice), wrapModal: (function(): $.CookieNotice), destroy: (function(): $.CookieNotice), setCookie: $.CookieNotice.setCookie, agree: (function(string=): $.CookieNotice), getState: ((function(string): (boolean|string))|*), wrapServiceHandler: $.CookieNotice.wrapServiceHandler, disagree: (function(string=): $.CookieNotice), wrapServices: $.CookieNotice.wrapServices, setState: (function(string, (boolean|string)): $.CookieNotice), hasConsent: (function(): boolean), eventsHandler: (function(): $.CookieNotice), prepareOptions: ((function(): boolean)|*)}}
+     */
     $.CookieNotice.prototype = {
         /**
          * Prepare user options
@@ -69,7 +84,7 @@
          * @return {boolean}
          */
         prepareOptions: function () {
-            // Cookies activés ?
+            // Enabled cookies?
             if (!navigator.cookieEnabled) {
                 return false;
             }
@@ -77,7 +92,7 @@
             // Classes
             this.replacePrefixClass();
 
-            // Éléments
+            // Elements
             if (!this.elements.container.length) {
                 this.setLog('Container element not found.', 'error');
                 return false;
@@ -101,7 +116,7 @@
         init: function () {
             this.wrapNotice();
 
-            // Si les états des services n'ont pas pu être récupérés depuis le cookie, c'est qu'il n'y a pas eu encore le consentement
+            // If no cookie information, it means there didn't had consent yet
             if (!this.loadStates()) {
                 this.setState('all', 'undefined');
                 this.notice('show');
@@ -290,7 +305,7 @@
         },
 
         /**
-         * Build the list of services in modal
+         * Build services list
          */
         wrapServices: function () {
             let self = this;
@@ -441,7 +456,7 @@
         },
 
         /**
-         * Build the actions for a service in modal
+         * Build actions list for a service
          *
          * @param {string} service
          */
@@ -616,7 +631,7 @@
         },
 
         /**
-         * Build the service handler
+         * Build service handler
          */
         wrapServiceHandler: function () {
             let self = this;
@@ -763,7 +778,7 @@
         },
 
         /**
-         * Set the state of service
+         * Set service's state
          *
          * @param {string} service
          * @param {boolean|string} state true/false or 'undefined'
@@ -771,7 +786,7 @@
         setState: function (service, state) {
             let self = this;
 
-            // Gloal variables
+            // Global variables
             if (service === 'all' && self.config.services !== undefined) {
                 $.each(self.config.services, function (configService) {
                     if (configService !== 'all') {
@@ -863,7 +878,7 @@
         },
 
         /**
-         * Load services state from cookie storage
+         * Load services state from cookie
          *
          * @return {boolean|object}
          */
@@ -884,7 +899,7 @@
         },
 
         /**
-         * Return the state of service. If there is no choice, the returned state is "undefined"
+         * Return service's state. If there isn't choice, the state will be "undefined"
          *
          * @param {string} service
          * @return {boolean|string}
