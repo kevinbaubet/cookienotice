@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Global
+   General
    ========================================================================== */
 @import "variables";
 
@@ -16,7 +16,7 @@
 }
 
 /* ==========================================================================
-   Notice des cookies : bandeau
+   Quick notice
    ========================================================================== */
 .notice--cookie {
     position: fixed;
@@ -69,7 +69,7 @@
 
     /* Responsive
     ========================================================================== */
-    @media screen and (max-width: $breakpoint--smartphone) {
+    @media screen and (max-width: $breakpoint--mobile) {
         margin-top: $notice-cookie--gutter-width;
         justify-content: center;
         flex-direction: column;
@@ -94,7 +94,7 @@
 
     /* Responsive
     ========================================================================== */
-    @media screen and (min-width: $breakpoint--smartphone - 1px) {
+    @media screen and (min-width: $breakpoint--mobile - 1px) {
         + .cookienotice-btn {
             margin-right: $notice-cookie--gutter-width/2;
         }
@@ -120,7 +120,7 @@
 
 
 /* ==========================================================================
-   Modal des cookies
+   Customize modal
    ========================================================================== */
 .modal--cookie {
     position: fixed;
@@ -160,7 +160,7 @@
 
     /* Responsive
        ========================================================================== */
-    @media screen and (max-width: $breakpoint--smartphone) {
+    @media screen and (max-width: $breakpoint--mobile) {
         top: 0;
         left: 0;
         transform: none;
@@ -199,7 +199,7 @@
     }
 }
 
-/* Close btn
+/* Close button
 ========================================================================== */
 .cookienotice-modal-close { $s: 40px;
     position: absolute;
@@ -262,7 +262,7 @@
     padding-bottom: $v-align/2;
 }
 
-/* Groupes
+/* Groups
    ========================================================================== */
 .cookienotice-group {
     padding: $v-align/2 0;
