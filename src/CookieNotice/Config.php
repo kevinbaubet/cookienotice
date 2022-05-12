@@ -27,11 +27,11 @@ abstract class Config {
              */
             'notice' => [
                 'description' => '
-                    <h2 class="cookienotice-modal-label">We respect your privacy</h2>
+                    <p class="cookienotice-modal-label">We respect your privacy</p>
                     <p>We use non-sensitive data such as cookies to ensure the optimal functioning of the site and to compile audience statistics. Click on the "{agree}" button to give your consent to these operations and enjoy a personalized experience. Click on "{disagree}" to refuse them or modify your preferences by clicking on "{customize}".</p>
                 ',
                 'summary' => '
-                    <h2 class="cookienotice-modal-label">We respect your privacy</h2>
+                    <p class="cookienotice-modal-label">We respect your privacy</p>
                     <p>We use non-sensitive data such as cookies to ensure the optimal functioning of the site and to carry out audience statistics ... (see more)</p>
                 ',
                 'agree' => 'Accept all',
@@ -43,14 +43,14 @@ abstract class Config {
              * (optional) Modal configuration to customize services
              *
              * - label       Modal title
-             * - labelTag    (optional) Tag used for modal title. If hN, the subtitles will be increase automatically
+             * - labelTag    (optional) Tag used for modal titles. If hN, the subtitles will be increase automatically
              * - description (optional) Modal description
              * - close       Button label to close modal
              */
             //
             'modal' => [
                 'label' => 'Privacy preference center',
-                'labelTag' => 'h2',
+                'labelTag' => 'p',
                 'description' => '<p>When you visit a website, data may be stored in your browser in the form of cookies. This information may relate to you, your preferences or your device and is used to ensure that the website is functioning properly. The information does not identify you directly, but gives you a personalized experience. Because we respect your right to privacy, we give you the possibility to manage cookies.</p>',
                 'close' => 'Close'
             ],

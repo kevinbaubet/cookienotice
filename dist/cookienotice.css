@@ -55,7 +55,7 @@
   visibility: visible;
 }
 
-.notice--cookie p {
+.notice--cookie p:not(.cookienotice-modal-label) {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
@@ -446,7 +446,7 @@ a.cookienotice-service-label:focus {
   top: -20px;
 }
 
-.cookienotice-service-all-label {
+.cookienotice-service--all .cookienotice-service-all-label {
   margin-bottom: 0;
   color: #868395;
   font-size: 1.2em;

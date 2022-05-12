@@ -46,7 +46,7 @@
         visibility: visible;
     }
 
-    p {
+    p:not(.cookienotice-modal-label) {
         flex-grow: 1;
         margin: 0;
     }
@@ -385,13 +385,13 @@ a.cookienotice-service-label:focus {
         bottom: auto;
         top: -$v-align/2;
     }
-}
-.cookienotice-service-all-label {
-    margin-bottom: 0;
-    color: $notice-cookie-modal--color-primary;
-    font-size: 1.2em;
-    font-weight: bold;
-    text-transform: uppercase;
+    .cookienotice-service-all-label {
+        margin-bottom: 0;
+        color: $notice-cookie-modal--color-primary;
+        font-size: 1.2em;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
 }
 
 /* ==========================================================================
